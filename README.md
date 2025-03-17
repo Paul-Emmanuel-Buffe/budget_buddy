@@ -1,4 +1,6 @@
 # budget_buddy
+Le projet concerne la gestion d'un compte en banque avec une base de données et une interface graphique
+
 
 telecharger jmerise(prendre la version etudiant): 
 https://www.jfreesoft.com/JMerise/
