@@ -1,4 +1,4 @@
-create databases banque;
+create database banque;
 
 CREATE TABLE Utilisateur(
         idUtilisateur Int  Auto_increment  NOT NULL ,
@@ -8,24 +8,24 @@ CREATE TABLE Utilisateur(
         motDePasse    Varchar (50) NOT NULL ,
         admin         Bool NOT NULL
 	,CONSTRAINT Utilisateur_PK PRIMARY KEY (idUtilisateur)
-)
+);
 CREATE TABLE type(
         idType Int  Auto_increment  NOT NULL ,
         titre  Varchar (100) NOT NULL
 	,CONSTRAINT type_PK PRIMARY KEY (idType)
-)
+);
 CREATE TABLE categorie(
         idCategorie Int  Auto_increment  NOT NULL ,
         titre       Varchar (200) NOT NULL
 	,CONSTRAINT categorie_PK PRIMARY KEY (idCategorie)
-)
+);
 CREATE TABLE compte(
         idCompte      Int  Auto_increment  NOT NULL ,
         montant       Float NOT NULL ,
         idUtilisateur Int NOT NULL
 	,CONSTRAINT compte_PK PRIMARY KEY (idCompte)
 	,CONSTRAINT compte_Utilisateur_FK FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur(idUtilisateur)
-)
+);
 CREATE TABLE Transaction(
         reference       Int  Auto_increment  NOT NULL ,
         description     Varchar (250) NOT NULL ,
@@ -38,5 +38,5 @@ CREATE TABLE Transaction(
 	,CONSTRAINT Transaction_categorie_FK FOREIGN KEY (idCategorie) REFERENCES categorie(idCategorie)
 	,CONSTRAINT Transaction_type0_FK FOREIGN KEY (idType) REFERENCES type(idType)
 	,CONSTRAINT Transaction_compte1_FK FOREIGN KEY (idCompte) REFERENCES compte(idCompte)
-)
+);
 
