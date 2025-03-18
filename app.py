@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 
 # Configuration de la base de données
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:XXXXX@localhost/banque' # Remplacer selon l'architecture 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:cN06+#P34@localhost/banque'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
