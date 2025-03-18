@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css\index.css">
+</head>
+<body>
+    <p>ceci est la page pour enregistrer un utilisateur</p>
+    <a href="{{url_for('index')}}">acceuil</a>
+    <a href="{{url_for('connection')}}">page de connexion</a>
+
+    <form>
+        <label for="">nom : </label>
+        <input type="text" name="nom" id="">
+        <label for="">prenom : </label>
+        <input type="text" name="prenom" id="">
+        <label for="">mail : </label>
+        <input type="email" name="email" id="">
+        <label for="">mot de passe : </label>
+        <input type="password" name="motDePasse" id="">
+        <input type="button" value="submit">
+    </form>
+
+</body>
+</html>
