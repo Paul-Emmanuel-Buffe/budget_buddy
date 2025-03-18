@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>Mon compte Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Identification</h1>
+        <form method="POST">
+            <label for="username">Utilisateur:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="motDePasse">Mot de passe:</label>
+            <input type="motDePasse" id="motDePasse" name="motDePasse" required>
+            <button type="submit">Submit</button>
+        </form>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
