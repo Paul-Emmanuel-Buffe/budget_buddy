@@ -9,7 +9,13 @@ class User:
             database="banque"
         )
         self.cursor = self.myDb.cursor()
+        self.__listeUser = []
 
+    def set_liste_user(self, user):
+        self.__listeUser = user
+
+    def set_liste_user(self):
+        return self.__listeUser
     def create(self, nom, prenom, email, motDePasse, salt, admin):
 
         query = 'insert into utilisateur (nom, prenom, email, motDePasse, salt, admin) values (%s,%s,%s,%s,%s,%s);'
@@ -18,23 +24,26 @@ class User:
 
     
     def read(self):
-        self.cursor.execute('select idUtilisateur, nom,prenom,email from utilisateur;')
+        self.cursor.execute('select nom,prenom,email from utilisateur;')
         for i in self.cursor:
-            product = {
+            user = {
                 'id':i[0],
                 'nom':i[1],
                 'prenom':i[2],
                 'mail':i[3],
                 }
             
+            
     def read_connection(self):
         self.cursor.execute('select email, motDePasse, salt from utilisateur;')
         for i in self.cursor:
-            product = {
+            user = {
                 'mail':i[0],
                 'motDePasse':i[1],
                 'salt':i[2]
                 }
+            self.set_liste_user(user)
+            
         
     def update(self, nom,description,price,quantity, id):
         query = 'update product set nom = %s , prenom = %s , email = %s where id = %s'
