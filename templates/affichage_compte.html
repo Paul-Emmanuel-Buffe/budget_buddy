@@ -8,9 +8,20 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
         <title>Tableau des Transactions</title>
     </head>
-<body>
+<body class ="affichage_compte">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Accueil</a>
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link active" href="{{ url_for('index') }}">Accueil</a>
+                <a class="nav-item nav-link" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                <a class="nav-item nav-link" href="#">Contact</a>
+            </div>
+        </div>
+    </nav>
+    
     <div class="tableau_operations">
-        <h1 class="my-4">Tableau des Transactions</h1>
+        <h1 class="my-4">Tableau des Opérations</h1>
         {{ table|safe }}
     </div>
 </body>

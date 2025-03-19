@@ -8,10 +8,12 @@
     <title>Mon compte Flask</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
+<body class=" index">
+
     <div class="container">
-        <h1>Identification</h1>
+        <h1>Votre banque : Notre argent</h1>
         <form method="POST">
+            <h2>Identification</h2>
             <label for="nom">Utilisateur:</label>
             <input type="text" id="nom" name="nom" required>
             <label for="motDePasse">Mot de passe:</label>

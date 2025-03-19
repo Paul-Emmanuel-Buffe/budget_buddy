@@ -5,47 +5,94 @@
     --blanc-cassé: #F7F7F7; 
   }
 
-body {
-        font-family: 'Roboto', sans-serif;
-        background-image: url('money.jpg'); /* Utilisez url() pour spécifier l'image */
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
+/* Styles pour la barre de navigation */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+}
 
-.container {
-    width: 400px; /* Taille fixe */
-    margin: 50px auto; /* Centrage horizontal avec un peu d'espace au-dessus et en-dessous */
-    padding: 20px; /* Espace interne */
-    background-color: #f9f9f9; /* Fond léger */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre */
+.navbar .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 15px;
+}
+
+.navbar-nav.ml-auto {
+    margin-left: auto;
+}
+
+/* Style de base du body */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column; /* Changé pour permettre à la navbar d'être en haut */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding-top: 56px; /* Espace pour la navbar */
+}
+
+body.index{
+    background-image: url('money2.jpg');
+}
+body.affichage_compte{
+    background-image: url('money.jpg');
+}
+/* Style du conteneur principal */
+.container:not(.navbar .container) {
+    width: 700px;
+    margin: auto;
+    padding: 20px;
 }
 
 h1 {
+    margin-bottom: 60px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 2.75em;
+    padding: 15px;
+}
+
+h2{
     text-align: center;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    align-items: center; /* Centre les éléments horizontalement */
+    background-color: #f9f9f9; /* Fond léger */
+    border-radius: 8px; /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    padding: 20px; /* Ajoute un padding pour espacer les éléments des bords */
 }
 
 label {
     margin-top: 10px;
+    width: 100%; /* Assure que les labels prennent toute la largeur disponible */
+    text-align: left; /* Aligne le texte à gauche */
 }
 
 input {
+    width: 100%; /* Assure que les inputs prennent toute la largeur disponible */
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
 }
 
 button {
+    width: 100%; /* Assure que le bouton prend toute la largeur disponible */
     margin-top: 20px;
     padding: 10px;
     background-color: #007BFF;
@@ -59,6 +106,7 @@ button:hover {
     background-color: #0056b3;
 }
 
+
 /* Tableau des transactions */
 
 /* Style pour le titre */
@@ -68,7 +116,7 @@ button:hover {
     background-color: #f8f9fa; /* Couleur de fond */
     border-radius: 8px; /* Bordures arrondies */
     padding: 10px;
-    border: 1px solid #dee2e6; /* Bordure */
+    border: 2px solid var(--bleu-clair); /* Bordure */
     margin-bottom: 20px; /* Espace entre le titre et le tableau */
 }
 
@@ -77,16 +125,17 @@ button:hover {
     margin: 0 auto; /* Centrer le tableau */
     margin-bottom: 1rem;
     color: var(black);
+
     border-radius: 10px; /* Bords arrondis */
     overflow: hidden; /* bords arrondis fonctionnent */
-    background-color: var(--blanc-cassé);
+    background-color: var(--gris-doux);
 }
 
 .table th,
 .table td {
     padding: 0.75rem;
     vertical-align: top;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid var(--bleu-clair);
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -120,7 +169,6 @@ button:hover {
     width: 100%;
     max-width: 100%; 
     margin: 0 auto; 
-    padding: 20px; /
-
+    padding: 20px; 
 }
 

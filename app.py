@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask import redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import mysql.connector
 import pandas as pd
@@ -44,7 +45,8 @@ def index():
             user = User.query.filter_by(nom=nom).first()  # Find user by 'nom'
             
             if user and user.check_password(motDePasse):  # Check password hash
-                message = "User ready"
+                # Changement ici : redirection vers la page des comptes au lieu d'afficher un message
+                return redirect(url_for('affichage_compte'))
             else:
                 message = "No User"
         else:
