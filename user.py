@@ -27,6 +27,14 @@ class User:
                 'mail':i[3],
                 }
             
+    def read_connection(self):
+        self.cursor.execute('select email, motDePasse, salt from utilisateur;')
+        for i in self.cursor:
+            product = {
+                'mail':i[0],
+                'motDePasse':i[1],
+                'salt':i[2]
+                }
         
     def update(self, nom,description,price,quantity, id):
         query = 'update product set nom = %s , prenom = %s , email = %s where id = %s'

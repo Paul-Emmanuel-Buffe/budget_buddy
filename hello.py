@@ -45,3 +45,14 @@ def traitement():
     else:
         return redirect(url_for('/index'))
     
+@app.route('/traitementConnexion', methods=["POST"])
+def traitementConnexion():
+    if request.method == "POST":
+        email = request.form['email']
+        password = request.form['password']
+
+        return redirect(url_for('index'))
+    
+    else:
+        return redirect(url_for('index'))
+    
