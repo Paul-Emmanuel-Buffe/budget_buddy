@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>Mon compte Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>HELLO BIENVENUE SUR L'INDEX</h1>
-    <a href="{{url_for('connection')}}">page de connexion</a>
+    
     <a href="{{url_for('register')}}">s'enregistrer</a>
+    <div class="container">
+        <h1>Identification</h1>
+        <form method="POST" action="{{ url_for('traitementConnexion') }}">
+            <label for="nom">Utilisateur:</label>
+            <input type="text" id="nom" name="email" required>
+
+            <label for="motDePasse">Mot de passe:</label>
+            <input type="password" id="motDePasse" name="password" required>
+            <input type="submit" id="dis" value="submit">
+        </form>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>

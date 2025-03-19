@@ -3,6 +3,7 @@ from markupsafe import escape
 from user import User
 import hashlib
 import secrets
+
 app = Flask(__name__)
 user = User()
 
@@ -11,10 +12,6 @@ user = User()
 def index():
     return render_template("index.html")
 
-
-@app.route("/connection")
-def connection():
-    return render_template("connection.html")
 
 @app.route("/register")
 def register():
@@ -40,16 +37,17 @@ def traitement():
 
         user.create(nom, prenom, email, hash_hex ,salt,admin)
 
-        return redirect(url_for('connection'))
-    
-    else:
         return redirect(url_for('/index'))
     
 @app.route('/traitementConnexion', methods=["POST"])
 def traitementConnexion():
+    
     if request.method == "POST":
         email = request.form['email']
         password = request.form['password']
+        listUtilisateur = user.read_connection(email)
+        
+        print(user.listeUser)
 
         return redirect(url_for('index'))
     
