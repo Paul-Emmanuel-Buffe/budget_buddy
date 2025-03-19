@@ -5,7 +5,8 @@ CREATE TABLE Utilisateur(
         nom           Varchar (50) NOT NULL ,
         prenom        Varchar (50) NOT NULL ,
         email         Varchar (100) NOT NULL ,
-        motDePasse    Varchar (50) NOT NULL ,
+        motDePasse    Varchar (255) NOT NULL ,
+        salt          Varchar (255) NOT NULL,
         admin         Bool NOT NULL
 	,CONSTRAINT Utilisateur_PK PRIMARY KEY (idUtilisateur)
 );

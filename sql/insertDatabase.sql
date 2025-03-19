@@ -1,11 +1,8 @@
-
-
-
 insert into categorie (titre) 
-values ("loisir"),("finance"),("autres")
+values ("loisir"),("finance"),("autres");
 
 insert into type (titre) 
-values ("retrait"),("versement"),("virement")
+values ("retrait"),("versement"),("virement");
 
 
 

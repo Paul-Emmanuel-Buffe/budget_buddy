@@ -1,19 +1,19 @@
 import mysql.connector
 
-class Utilisateur:
+class User:
     def __init__(self):
         self.myDb = mysql.connector.connect(
             host="localhost",
             user="root",
             password="root",
-            database="store"
+            database="banque"
         )
         self.cursor = self.myDb.cursor()
 
-    def create(self, nom, prenom, email, motDePasse):
+    def create(self, nom, prenom, email, motDePasse, salt, admin):
 
-        query = 'insert into utilisateur (nom, prenom, email, motDePasse,admin) values (%s,%s,%s,%s,%s);'
-        self.cursor.execute(query, ( nom, prenom, email, motDePasse))
+        query = 'insert into utilisateur (nom, prenom, email, motDePasse, salt, admin) values (%s,%s,%s,%s,%s,%s);'
+        self.cursor.execute(query, ( nom, prenom, email, motDePasse,salt, admin))
         self.myDb.commit()
 
     
