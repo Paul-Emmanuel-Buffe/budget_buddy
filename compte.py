@@ -8,7 +8,7 @@ class Account:
             password="root",
             database="banque"
         )
-        self.cursor = self.myDb.cursor()
+        self.cursor = self.myDb.cursor(buffered=True)
 
     def create(self, montant, idUtilisateur):
 
@@ -17,14 +17,21 @@ class Account:
         self.myDb.commit()
 
     
-    def read(self):
-        self.cursor.execute('select * from compte;')
-        for i in self.cursor:
+    def read(self, utilisateur):
+        query = ' select utilisateur.nom, utilisateur.prenom, compte.idCompte as numeroDeCompte, montant from compte inner join utilisateur on utilisateur.idUtilisateur = compte.idUtilisateur where utilisateur.idUtilisateur = %s order by idCompte asc; '
+        self.cursor.execute(query, (utilisateur,))
+        result = self.cursor.fetchall()
+        accounts = []
+        for results in result:
             account = {
-                'accountNumber':i[0],
-                'montant':i[1],
-                'nom_utilisateur':i[2],
+                'nom':results[0],
+                'prenom':results[1],
+                'numeroDeCompte':results[2],
+                'montant':results[3]
                 }
+            accounts.append(account)
+            print(accounts)
+        return accounts
             
         
     def update(self, montant):

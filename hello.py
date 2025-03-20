@@ -32,6 +32,13 @@ def registerAccount():
 def action():
     return render_template('action.html')
 
+@app.route('/listAccount')
+def listAccount():
+    Data = account.read(session['idUtilisateur'])
+    
+
+    return render_template('listAccount.html', data=Data)
+
 @app.route('/traitementregisterAccount', methods=["POST"])
 def traitementregisterAccount():
     

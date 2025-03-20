@@ -7,7 +7,7 @@
 </head>
 {% if 'user' in session %}
         <a href="{{url_for('logout')}}">se deconnecter</a>
-        <a href="{{url_for('logout')}}">vos compte</a>
+        <a href="{{url_for('listAccount')}}">vos compte</a>
         <a href="{{url_for('logout')}}">vos transactions</a>
     {% else %}
         <a href="{{url_for('register')}}">s'enregistrer</a>
