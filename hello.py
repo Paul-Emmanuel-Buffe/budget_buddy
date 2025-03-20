@@ -13,6 +13,17 @@ app.permanent_session_lifetime = timedelta(minutes=60)
 user = User()
 account = Account()
 
+@app.route('/simuler_connexion')
+def simuler_connexion():
+    # Simuler une connexion en définissant les clés nécessaires dans la session
+    session['user'] = 'utilisateur_test'  # Nom d'utilisateur simulé
+    session['idUtilisateur'] = 3  # ID utilisateur simulé (remplacez par une valeur valide)
+    session.permanent = True  # Rendre la session permanente
+
+    # Message de confirmation
+    flash('Connexion simulée avec succès. Vous pouvez maintenant accéder aux fonctionnalités.', 'success')
+    return redirect(url_for('index'))
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     message = ""
@@ -34,18 +45,44 @@ def index():
 
 @app.route('/affichage_compte')
 def affichage_compte():
-    query = 'SELECT description, montant, dateTransaction FROM transaction WHERE idCompte = %s ORDER BY dateTransaction DESC'
-    cursor = user.cursor  # Utilisation du curseur défini dans user.py
-    cursor.execute(query, (3,))  # Parameterize the query
-    results = cursor.fetchall()
+    # Vérifiez si l'utilisateur est connecté
+    if 'user' not in session:
+        return redirect(url_for('index'))
 
-    columns = cursor.column_names
-
-    df = pd.DataFrame(results, columns=columns)
-    df.rename(columns={'description': 'Opérations', 'montant': 'Montant', 'dateTransaction': 'Date'}, inplace=True)
-    df_html = df.to_html(classes='table table-striped', index=False)
-
-    return render_template('affichage_compte.html', table=df_html)
+    try:
+        # S'assurer que la connexion est active
+        user.ensure_connection()
+        
+        # Requête SQL pour récupérer les transactions
+        query = '''
+            SELECT description, montant, dateTransaction 
+            FROM transaction 
+            WHERE idCompte = %s 
+            ORDER BY dateTransaction DESC
+        '''
+        
+        user.cursor.execute(query, (3,))
+        results = user.cursor.fetchall()
+        
+        # Obtenez les noms des colonnes - ajustez selon votre version de MySQL
+        columns = [desc[0] for desc in user.cursor.description]
+        
+        # Création d'un DataFrame pandas pour formater les données
+        df = pd.DataFrame(results, columns=columns)
+        df.rename(columns={
+            'description': 'Opérations', 
+            'montant': 'Montant', 
+            'dateTransaction': 'Date'
+        }, inplace=True)
+        
+        # Conversion du DataFrame en HTML
+        df_html = df.to_html(classes='table table-striped', index=False)
+        
+        return render_template('affichage_compte.html', table=df_html)
+    
+    except Exception as e:
+        # Gestion des erreurs
+        return f"Une erreur s'est produite : {str(e)}", 500
 
 @app.route("/register")
 def register():
@@ -104,6 +141,10 @@ def traitementConnexion():
         else:
             flash('Le mail ou le mot de passe ne sont pas corrects')
     return redirect(url_for('index'))
+
+@app.route("/actions")
+def actions():
+    return render_template('actions.html')
 
 @app.route('/logout')
 def logout():

@@ -8,27 +8,22 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
     <body class="registerAccount">
-        {% if 'user' in session %}
-            <div class="navbar-links">
-                <a href="{{url_for('logout')}}">Se déconnecter</a>
-                <a href="{{url_for('listAccount')}}">Vos comptes</a>
-                <a href="{{url_for('transactions')}}">Vos transactions</a>
-            </div>
-        {% else %}
+        
+       {% if 'user' in session %}
+                <nav class="navbar">
+                    <div class="dock">   
+                        <a class="navbar-brand" href="{{ url_for('index') }}">Ma Banque</a>
+                        <div class="navbar-nav">
+                            <a class="nav-item active" href="{{ url_for('index') }}">Accueil</a>
+                            <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                            <a class="nav-item {% if request.endpoint == 'actions' %}active{% endif %}" href="{{ url_for('actions') }}">Filtrage</a> <!-- Nouvel onglet -->
+                            <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                    {% else %}
 
-        {% endif %}
-
-        <!-- Barre de navigation -->
-        <nav class="navbar">
-            <div class="dock">  
-                <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
-                <div class="navbar-nav">
-                    <a class="nav-item active" href="{{ url_for('index') }}">Accueil</a>
-                    <a class="nav-item" href="{{ url_for('affichage_compte') }}">Transactions</a>
-                    <a class="nav-item" href="#">Contact</a>
-                </div>
-            </div>
-        </nav>
+                    {% endif %}
+                        </div>
+                    </div>
+               </nav>
 
         <!-- Contenu principal de la page -->
         <div class="container registerAccount-form">
@@ -42,3 +37,4 @@
         </div>
     </body>
 </html>
+ 
