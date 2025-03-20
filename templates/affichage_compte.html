@@ -1,28 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
     <head>
-        <meta charset="utf-8">
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <title>Mon compte Flask</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-        <title>Tableau des Transactions</title>
     </head>
-<body class ="affichage_compte">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Accueil</a>
-            <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link active" href="{{ url_for('index') }}">Accueil</a>
-                <a class="nav-item nav-link" href="{{ url_for('affichage_compte') }}">Transactions</a>
-                <a class="nav-item nav-link" href="#">Contact</a>
-            </div>
+<body class = "transactions">
+    <!-- Barre de navigation -->
+<nav class="navbar">
+    <div class="dock">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+        <div class="navbar-nav">
+            <a class="nav-item {% if request.path == url_for('index') %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
+            {% if session.get('user') %}
+                <a class="nav-item {% if request.path == url_for('registerAccount') %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+            {% else %}
+                <a class="nav-item {% if request.path == url_for('register') %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+            {% endif %}
         </div>
-    </nav>
-    
-    <div class="tableau_operations">
-        <h1 class="my-4">Tableau des Opérations</h1>
-        {{ table|safe }}
+    </div>
+</nav>
+    <!-- Contenu principal -->
+    <div class="container">
+        <div class="tableau_operations">
+            <h1 class="my-4">Tableau des Opérations</h1>
+            <table class="table table-striped">
+                {{ table|safe }}
+            </table>
+        </div>
     </div>
 </body>
 </html>

@@ -1,32 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>Mon compte Flask</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+<body class = 'inscription'>
+    <nav class="navbar">
+        <div class="dock">   
+            <a class="navbar-brand" href="{{ url_for('index') }}">Ma Banque</a>
+            <div class="navbar-nav">
+                <a class="nav-item active" href="{{ url_for('index') }}">Accueil</a>
+                <a class="nav-item" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
     
-</head>
-<body>
-    <p>ceci est la page pour enregistrer un utilisateur</p>
-    <a href="{{url_for('index')}}">acceuil</a>
-    
 
-    <form method="post" action="{{ url_for('traitement') }}">
-        <label for="">nom : </label>
-        <input type="text" name="nom" id="">
+    <!-- Contenu principal -->
+    <div class="container">  
+        <div class="join"> 
+            <h1>Rejoignez-nous</h1>
+            <form method="post" action="{{ url_for('traitement') }}">
+                <label for="nom">Nom : </label>
+                <input type="text" name="nom" id="nom">
 
-        <label for="" >prenom : </label>
-        <input type="text" name="prenom" id="">
+                <label for="prenom">Prénom : </label>
+                <input type="text" name="prenom" id="prenom">
 
-        <label for="">mail : </label>
-        <input type="email" name="email" id="">
-        
-        <label for="">mot de passe : </label>
-        <input type="password" name="password" id="mdp">
-        
-        <input type="submit" id="dis" value="submit">
-    </form>
+                <label for="email">Mail : </label>
+                <input type="email" name="email" id="email">
+                
+                <label for="mdp">Mot de passe : </label>
+                <input type="password" name="password" id="mdp">
+                
+                <input type="submit" id="dis" value="S'inscrire">
+            </form>
+        </div>    
+    </div>
+
     <script src="{{ url_for('static', filename='js/action.js') }}"></script>
 </body>
 </html>

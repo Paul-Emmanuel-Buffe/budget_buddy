@@ -3,54 +3,100 @@
     --gris-doux: #E1E1E1;  /* Gris clair */
     --vert-clair: #6B9C5B; /* Vert */
     --blanc-cassé: #F7F7F7; 
-  }
+}
 
 /* Styles pour la barre de navigation */
 .navbar {
+    background-color: var(--bleu-clair);
+    padding: 10px 0;
+    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    width: 100%;
     z-index: 1000;
 }
 
-.navbar .container {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 15px;
+.navbar-brand {
+    font-size: 1.75rem; /* Augmente la taille du texte */
+    font-weight: bold; /* Rendre le texte plus visible */
 }
 
-.navbar-nav.ml-auto {
-    margin-left: auto;
+/* Container pour centrer le contenu */
+.navbar .dock {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Liens de la navbar */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: inline-block;
 }
 
 /* Style de base du body */
 body {
     font-family: 'Roboto', sans-serif;
+    background-color: var(--gris-doux);
     background-size: cover;
     background-position: center;
     display: flex;
-    flex-direction: column; /* Changé pour permettre à la navbar d'être en haut */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     margin: 0;
-    padding-top: 56px; /* Espace pour la navbar */
+    padding-top: 56px;
 }
 
-body.index{
-    background-image: url('money2.jpg');
+body.inscription {
+    background-image: url("money.jpg"); 
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-repeat: no-repeat; /* Pas de répétition de l'image */
+    height: 100vh; /* Utilise toute la hauteur de la fenêtre */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Positionne les éléments en haut de la page */
+    align-items: center; /* Centre les éléments horizontalement */
+    margin: 0;
+    padding: 0;
 }
-body.affichage_compte{
-    background-image: url('money.jpg');
+
+body.index {
+    background-image: url("money2.jpg"); 
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-repeat: no-repeat; /* Pas de répétition de l'image */
+    height: 100vh; /* Utilise toute la hauteur de la fenêtre */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Positionne les éléments en haut de la page */
+    align-items: center; /* Centre les éléments horizontalement */
+    margin: 0;
+    padding: 0;
+
 }
-/* Style du conteneur principal */
-.container:not(.navbar .container) {
-    width: 700px;
-    margin: auto;
-    padding: 20px;
+
+body.transactions {
+    background-image: url("sky.jpg"); 
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-repeat: no-repeat; /* Pas de répétition de l'image */
+    height: 100vh; /* Utilise toute la hauteur de la fenêtre */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Positionne les éléments en haut de la page */
+    align-items: center; /* Centre les éléments horizontalement */
+    margin: 0;
+    padding: 0;
 }
+
 
 h1 {
     margin-bottom: 60px;
@@ -62,113 +108,325 @@ h1 {
     padding: 15px;
 }
 
-h2{
+h2 {
     text-align: center;
 }
 
+/* Formulaire */
 form {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centre les éléments horizontalement */
-    background-color: #f9f9f9; /* Fond léger */
-    border-radius: 8px; /* Coins arrondis */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Légère ombre */
-    padding: 20px; /* Ajoute un padding pour espacer les éléments des bords */
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-label {
-    margin-top: 10px;
-    width: 100%; /* Assure que les labels prennent toute la largeur disponible */
-    text-align: left; /* Aligne le texte à gauche */
+/* Container qui va occuper 2/3 de la largeur de la page */
+.container{
+    width: 66.67%; /* 2/3 de la page */
+    margin: 50px auto; /* Centrer le contenu */
 }
 
-input {
-    width: 100%; /* Assure que les inputs prennent toute la largeur disponible */
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+.tableau_operations{
+    margin-top: 50px;
 }
-
-button {
-    width: 100%; /* Assure que le bouton prend toute la largeur disponible */
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-
-/* Tableau des transactions */
 
 /* Style pour le titre */
 .tableau_operations h1 {
-    width: 66.67%; /* 2/3 de la largeur de la page */
-    margin: 0 auto; /* Centrer le tableau */
-    background-color: #f8f9fa; /* Couleur de fond */
-    border-radius: 8px; /* Bordures arrondies */
+    width: 80%; /* 2/3 de la largeur de la page */
+    margin: 0 auto; /* Centrer le titre */
+    background-color: #f8f9fa;
+    border-radius: 8px;
     padding: 10px;
-    border: 2px solid var(--bleu-clair); /* Bordure */
-    margin-bottom: 20px; /* Espace entre le titre et le tableau */
+    border: 2px solid var(--bleu-clair);
+    margin-bottom: 10px;
 }
 
+/* Style pour le tableau */
 .table {
-    width: 66.67%; /* 2/3 de la largeur de la page */
+    width: 100%; /* 2/3 de la largeur de la page */
     margin: 0 auto; /* Centrer le tableau */
-    margin-bottom: 1rem;
-    color: var(black);
+    border-radius: 10px; /* Coins arrondis */
+    overflow: hidden; /* Assurer que les bordures arrondies fonctionnent */
+    background-color: var(--gris-doux); /* Fond gris clair */
 
-    border-radius: 10px; /* Bords arrondis */
-    overflow: hidden; /* bords arrondis fonctionnent */
-    background-color: var(--gris-doux);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère pour profondeur */
 }
 
-.table th,
-.table td {
-    padding: 0.75rem;
-    vertical-align: top;
-    border-top: 1px solid var(--bleu-clair);
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Alignement des colonnes */
-
-.table th:first-child,
-.table td:first-child {
-    text-align: left; /* Aligner "Opérations" à gauche */
-}
-
-.table th:nth-child(2),
-.table td:nth-child(2) {
-    text-align: right; /* Aligner "Montant" à droite */
-}
-
-.table th:nth-child(3),
-.table td:nth-child(3) {
-    text-align: center; /* Aligner "Date" à droite */
-}
-
-/*Police des titres des colonnes*/
+/* Style des titres des colonnes */
 .table th {
-    font-size: 1.25rem; 
-    font-weight: bold; 
-}
-/* Positionnement tableau des opérations */
-.tableau_operations {
-    width: 100%;
-    max-width: 100%; 
-    margin: 0 auto; 
-    padding: 20px; 
+    background-color: var(--bleu-clair); /* Fond bleu clair */
+    color: white; /* Texte en blanc */
+    padding: 1rem; /* Espace interne */
+    text-align: center; /* Alignement centré */
+    font-size: 1.25rem; /* Taille de police */
+    font-weight: bold; /* Police en gras */
 }
 
+/* Style des cellules du tableau */
+.table td {
+    padding: 1rem; /* Espace interne */
+    text-align: center; /* Alignement centré */
+    border-top: 1px solid var(--bleu-clair); /* Bordure en haut de chaque cellule */
+    color: #333; /* Texte foncé pour plus de lisibilité */
+}
+
+/* Lignes alternées pour plus de contraste */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05); /* Fond alterné pour les lignes impaires */
+}
+
+/* Style pour les bordures des cellules */
+.table td,
+.table th {
+    border-right: 1px solid var(--bleu-clair); /* Bordure droite pour chaque cellule */
+}
+
+/* Eviter une bordure sur la dernière cellule */
+.table td:last-child,
+.table th:last-child {
+    border-right: none; /* Retirer la bordure à droite de la dernière cellule */
+}
+
+/* Effet au survol des lignes */
+.table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Changer la couleur de fond au survol */
+    cursor: pointer; /* Pointeur en forme de main */
+}
+
+
+/* ================== STYLES UNIQUEMENT POUR LA PAGE Index ================== */
+.container .acceuil {
+    width: 50%; /* 2/3 de la largeur de la page */
+    max-width: 800px; /* Limite la largeur sur les grands écrans */
+    background-color: transparent; /* Fond bleu clair pour le formulaire */
+    color: var(--blanc-cassé);
+    margin: auto; /* Centrer et laisser de l'espace sous la navbar */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.container h1 {
+    border-color: var(--bleu-clair);
+    border : 3px;
+    background-color: var(--vert-clair);
+    color: var(--blanc-cassé);
+}
+
+.container .acceuil form{
+    background-color: var(--vert-clair);
+}
+
+/* ================== FORMULAIRE ================== */
+.container .acceuil form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+    width: 100%;
+
+}
+
+.container .acceuil form input {
+    width: 100%; /* Les champs remplissent la boîte */
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+/* ================== BOUTON D'ENVOI ================== */
+.container .acceuil input[type="submit"] {
+    width: 100%; /* Le bouton occupe toute la largeur des champs */
+    background-color: var(--bleu-clair);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease; /* Transition pour un effet au survol */
+    padding: 12px 0; /* Ajouter de l'espace autour du texte du bouton */
+    border-radius: 5px; /* Arrondir les coins du bouton */
+    border: none; /* Enlever la bordure du bouton */
+    font-size: 1rem; /* Ajuster la taille du texte */
+}
+
+.container .acceuil input[type="submit"]:hover {
+    background-color: var(--vert-clair); /* Changer la couleur du bouton au survol */
+    transform: scale(1.05); /* Effet de zoom léger au survol */
+}
+/* ================== STYLES UNIQUEMENT POUR LA PAGE Register ================== */
+.join {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    padding: 2rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.join h1 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    width: 100%;
+    text-align: center; /* Pour centrer le texte */
+    box-sizing: border-box; /* Pour inclure le padding et la bordure dans la largeur totale */
+}
+
+
+.join form {
+    width: 93%;
+    display: flex;
+    flex-direction: column;
+}
+
+.join label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.join input[type="text"],
+.join input[type="email"],
+.join input[type="password"] {
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.join input[type="submit"] {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.join input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* ============================================
+   STYLES UNIQUEMENT POUR LA PAGE registerAccount
+   ============================================ */
+
+/* Conteneur principal spécifique à la page d'inscription */
+body.registerAccount {
+    background-image: url("finance.jpg"); 
+    background-size: cover; /* L'image couvre toute la page */
+    background-position: center; /* Centrer l'image */
+    background-repeat: no-repeat; /* Pas de répétition de l'image */
+    height: 100vh; /* Utilise toute la hauteur de la fenêtre */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrer le contenu verticalement */
+    align-items: center; /* Centre les éléments horizontalement */
+    margin: 0;
+    padding: 0;
+}
+
+/* Conteneur du formulaire d'inscription */
+.container.registerAccount-form {
+    width: 100%;
+    max-width: 500px;
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Titre de la page d'inscription */
+h1 {
+    font-size: 2.75em;
+    margin-bottom: 30px;
+    color: #333;
+    background-color: var(--gris-doux);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; /* Ajouter un peu d'espace entre le titre et le formulaire */
+    box-sizing: border-box; /* Assurez-vous que les marges et paddings sont bien pris en compte dans la largeur */
+}
+
+/* Style du champ de saisie */
+form label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+    color: #333;
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+/* Champ de saisie */
+form input[type="number"] {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    border: 1px solid var(--bleu-clair);
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+/* Bouton d'envoi du formulaire */
+form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--bleu-clair);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Effet de survol sur le bouton */
+form input[type="submit"]:hover {
+    background-color: var(--vert-clair);
+}
+
+/* Alignement de la section du formulaire avec le titre */
+.container.registerAccount-form {
+    width: 100%;
+    max-width: 500px;
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Titre de la page d'inscription */
+h1 {
+    font-size: 2.75em;
+    margin-bottom: 20px; /* Réduire l'espace sous le titre pour que le formulaire soit plus proche */
+    color: #333;
+    background-color: var(--gris-doux);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box; /* S'assurer que la largeur inclut le padding */
+}

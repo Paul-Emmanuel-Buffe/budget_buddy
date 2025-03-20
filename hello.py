@@ -35,6 +35,7 @@ def index():
 @app.route('/affichage_compte')
 def affichage_compte():
     query = 'SELECT description, montant, dateTransaction FROM transaction WHERE idCompte = %s ORDER BY dateTransaction DESC'
+    cursor = user.cursor  # Utilisation du curseur défini dans user.py
     cursor.execute(query, (3,))  # Parameterize the query
     results = cursor.fetchall()
 
@@ -57,6 +58,11 @@ def registerAccount():
 @app.route('/action')
 def action():
     return render_template('action.html')
+
+@app.route('/listAccount')
+def listAccount():
+    Data = account.read(session['idUtilisateur'])
+    return render_template('listAccount.html', data=Data)
 
 @app.route('/traitementregisterAccount', methods=["POST"])
 def traitementregisterAccount():

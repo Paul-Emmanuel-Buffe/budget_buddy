@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>voila la liste de vos comptes {{data.nom}} {{data.prenom}}</h1>
+    {% if 'user' in session %}
+        <a href="{{url_for('logout')}}">se deconnecter</a>
+        <a href="{{url_for('registerAccount')}}">creer compte</a>
+        <a href="{{url_for('listAccount')}}">vos compte</a>
+        <a href="{{url_for('logout')}}">vos transactions</a>
+    {% else %}
+        <a href="{{url_for('register')}}">s'enregistrer</a>
+    {% endif %}
+    <table>
+        <thead>
+            <tr> 
+            <th>numero de compte</th>
+            <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in data %}
+                <tr>
+                    <td>{{i.numeroDeCompte}}</td>
+                    <td>{{i.montant}}</td>
+                </tr>
+            {%endfor%}    
+        </tbody>
+    </table>
+
+</body>
+</html>

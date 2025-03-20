@@ -6,7 +6,8 @@ class User:
             host="localhost",
             user="root",
             password="cN06+#P34",
-            database="banque"
+            database="banque",
+            port=3306
         )
         self.cursor = self.myDb.cursor()
     

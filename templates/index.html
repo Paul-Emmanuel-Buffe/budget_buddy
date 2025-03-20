@@ -12,17 +12,20 @@
 
     <div class="container">
         <h1>Votre banque : Notre argent</h1>
-        <form method="POST">
-            <h2>Identification</h2>
-            <label for="nom">Utilisateur:</label>
-            <input type="text" id="nom" name="nom" required>
-            <label for="motDePasse">Mot de passe:</label>
-            <input type="password" id="motDePasse" name="motDePasse" required>
-            <button type="submit">Submit</button>
-        </form>
-        {% if message %}
-            <p>{{ message }}</p>
-        {% endif %}
+        <div class = "acceuil">
+
+            <form method="POST">
+                <h2>Identification</h2>
+                <label for="nom">Utilisateur:</label>
+                <input type="text" id="nom" name="nom" required>
+                <label for="motDePasse">Mot de passe:</label>
+                <input type="password" id="motDePasse" name="motDePasse" required>
+                <input type="submit" value="Se connecter">
+            </form>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>
