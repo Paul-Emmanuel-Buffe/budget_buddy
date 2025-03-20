@@ -30,7 +30,7 @@ class User:
             
     def read_connection(self, mail):
         user = []
-        query = 'select nom, email, motDePasse, salt from utilisateur where email = %s;'
+        query = 'select idUtilisateur, nom, email, motDePasse, salt from utilisateur where email = %s;'
         self.cursor.execute(query, (mail,))
         for i in self.cursor:
             for j,k in enumerate(i):

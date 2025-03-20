@@ -1,6 +1,6 @@
 import mysql.connector
 
-class User:
+class Account:
     def __init__(self):
         self.myDb = mysql.connector.connect(
             host="localhost",
@@ -12,7 +12,7 @@ class User:
 
     def create(self, montant, idUtilisateur):
 
-        query = 'insert into utilisateur (montant, idUtilisateur) values (%s,%s);'
+        query = 'insert into compte (montant, idUtilisateur) values (%s,%s);'
         self.cursor.execute(query, (montant, idUtilisateur))
         self.myDb.commit()
 
