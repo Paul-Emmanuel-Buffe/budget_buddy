@@ -9,7 +9,6 @@ class User:
             database="banque"
         )
         self.cursor = self.myDb.cursor()
-        self.listeUser = []
     
     def create(self, nom, prenom, email, motDePasse, salt, admin):
 
@@ -30,18 +29,14 @@ class User:
             
             
     def read_connection(self, mail):
-        query = 'select email, motDePasse, salt from utilisateur where email = %s;'
-
+        user = []
+        query = 'select nom, email, motDePasse, salt from utilisateur where email = %s;'
         self.cursor.execute(query, (mail,))
-
         for i in self.cursor:
-            print(i)
-            user = {
-                'mail':i[0],
-                'motDePasse':i[1],
-                'salt':i[2]
-                }
-            self.listeUser.append(user)
+            for j,k in enumerate(i):
+                user.append(k)
+                print(user)
+        return user
             
         
     def update(self, nom,description,price,quantity, id):

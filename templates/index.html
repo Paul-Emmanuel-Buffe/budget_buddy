@@ -10,8 +10,11 @@
 </head>
 <body>
     <h1>HELLO BIENVENUE SUR L'INDEX</h1>
-    
-    <a href="{{url_for('register')}}">s'enregistrer</a>
+    {% if 'user' in session %}
+        <a href="{{url_for('logout')}}">se deconnecter</a>
+    {% else %}
+        <a href="{{url_for('register')}}">s'enregistrer</a>
+    {% endif %}
     <div class="container">
         <h1>Identification</h1>
         <form method="POST" action="{{ url_for('traitementConnexion') }}">
