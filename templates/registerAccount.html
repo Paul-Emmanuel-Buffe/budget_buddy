@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+{% if 'user' in session %}
+        <a href="{{url_for('logout')}}">se deconnecter</a>
+        <a href="{{url_for('logout')}}">vos compte</a>
+        <a href="{{url_for('logout')}}">vos transactions</a>
+    {% else %}
+        <a href="{{url_for('register')}}">s'enregistrer</a>
+    {% endif %}
+<body>
+    <h1>creer votre compte</h1>
+    <form method="POST" action="{{ url_for('traitementregisterAccount') }}">
+        <label for="nom">montant de base : </label>
+        <input type="number" id="" name="montant" required>
+
+        <input type="submit" id="dis" value="submit">
+    </form>
+</body>
+</html>
