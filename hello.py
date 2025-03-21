@@ -153,5 +153,28 @@ def logout():
     flash('Vous avez été déconnecté', 'info')
     return redirect(url_for('index'))
 
+
+
+@app.route('/doTransaction')
+def doTransactions():
+    return render_template('doTransaction.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

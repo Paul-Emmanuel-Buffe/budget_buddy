@@ -15,6 +15,7 @@
             <div class="navbar-nav">
                 <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
                 {% if 'user' in session %}
+                <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('doTransaction') }}">Faire une transactions</a>
                     <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
                     <a class="nav-item {% if request.endpoint == 'actions' %}active{% endif %}" href="{{ url_for('actions') }}">Filtrage</a> <!-- Nouvel onglet -->
                     <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
@@ -24,7 +25,6 @@
             </div>
         </div>
     </nav>
-</nav>
     <!-- Contenu principal -->
     <div class="container">
         <div class="tableau_operations">

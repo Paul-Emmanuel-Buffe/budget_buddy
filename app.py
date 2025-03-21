@@ -14,10 +14,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 connection =    {
     "user" : "root",
-    "password" : "cN06+#P34",
+    "password" : "root",
     "host" : "localhost",
     "database" : "banque",
-    "port" : 3306
+    
     }
 conn = mysql.connector.connect(**connection)
 

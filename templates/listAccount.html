@@ -6,6 +6,22 @@
     <title>Document</title>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="dock">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+            <div class="navbar-nav">
+                <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
+                {% if 'user' in session %}
+                <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('doTransaction') }}">Faire une transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                {% else %}
+                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
     <h1>voila la liste de vos comptes {{data.nom}} {{data.prenom}}</h1>
     {% if 'user' in session %}
         <a href="{{url_for('logout')}}">se deconnecter</a>
