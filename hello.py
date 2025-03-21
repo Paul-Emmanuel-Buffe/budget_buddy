@@ -13,16 +13,6 @@ app.permanent_session_lifetime = timedelta(minutes=60)
 user = User()
 account = Account()
 
-@app.route('/simuler_connexion')
-def simuler_connexion():
-    # Simuler une connexion en définissant les clés nécessaires dans la session
-    session['user'] = 'utilisateur_test'  # Nom d'utilisateur simulé
-    session['idUtilisateur'] = 3  # ID utilisateur simulé (remplacez par une valeur valide)
-    session.permanent = True  # Rendre la session permanente
-
-    # Message de confirmation
-    flash('Connexion simulée avec succès. Vous pouvez maintenant accéder aux fonctionnalités.', 'success')
-    return redirect(url_for('index'))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -49,40 +39,67 @@ def affichage_compte():
     if 'user' not in session:
         return redirect(url_for('index'))
 
-    try:
+    else:
         # S'assurer que la connexion est active
         user.ensure_connection()
-        
-        # Requête SQL pour récupérer les transactions
-        query = '''
-            SELECT description, montant, dateTransaction 
-            FROM transaction 
-            WHERE idCompte = %s 
-            ORDER BY dateTransaction DESC
-        '''
-        
-        user.cursor.execute(query, (3,))
+
+        # Récupérer les paramètres de la requête
+        date = request.args.get('date')
+        categorie = request.args.get('categorie')
+        type_transaction = request.args.get('type')
+        tri_montant = request.args.get('tri_montant')
+        date_debut = request.args.get('date_debut')
+        date_fin = request.args.get('date_fin')
+
+        # Construire la requête SQL en fonction des filtres
+        query = "SELECT description, montant, dateTransaction FROM transaction WHERE idCompte = %s"
+        params = [session['idUtilisateur']]
+
+        # Ajouter des filtres à la requête si nécessaire
+        if date:  # Si une date spécifique est fournie
+            query += " AND dateTransaction = %s"
+            params.append(date)
+
+        if categorie:  # Si une catégorie est fournie
+            query += " AND idCategorie = %s"
+            params.append(categorie)
+
+        if type_transaction:  # Si un type de transaction est fourni
+            query += " AND idType = %s"
+            params.append(type_transaction)
+
+        if date_debut and date_fin:  # Si une plage de dates est fournie
+            query += " AND dateTransaction BETWEEN %s AND %s"
+            params.extend([date_debut, date_fin])
+
+        if tri_montant:  # Si un tri sur le montant est demandé
+            query += f" ORDER BY montant {'ASC' if tri_montant == 'croissant' else 'DESC'}"
+        else:
+            query += " ORDER BY dateTransaction DESC"
+
+        # Débogage : afficher la requête et les paramètres
+        print(f"Executing query: {query}")
+        print(f"With params: {params}")
+
+        # Exécuter la requête SQL
+        user.cursor.execute(query, tuple(params))  # Assurez-vous de passer un tuple de paramètres
         results = user.cursor.fetchall()
-        
-        # Obtenez les noms des colonnes - ajustez selon votre version de MySQL
+
+        # Obtenez les noms des colonnes
         columns = [desc[0] for desc in user.cursor.description]
-        
+
         # Création d'un DataFrame pandas pour formater les données
         df = pd.DataFrame(results, columns=columns)
         df.rename(columns={
-            'description': 'Opérations', 
-            'montant': 'Montant', 
+            'description': 'Opérations',
+            'montant': 'Montant',
             'dateTransaction': 'Date'
         }, inplace=True)
-        
+
         # Conversion du DataFrame en HTML
         df_html = df.to_html(classes='table table-striped', index=False)
-        
+
         return render_template('affichage_compte.html', table=df_html)
-    
-    except Exception as e:
-        # Gestion des erreurs
-        return f"Une erreur s'est produite : {str(e)}", 500
 
 @app.route("/register")
 def register():
@@ -152,6 +169,29 @@ def logout():
     session.clear()
     flash('Vous avez été déconnecté', 'info')
     return redirect(url_for('index'))
+
+
+
+@app.route('/doTransaction')
+def doTransactions():
+    return render_template('doTransaction.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

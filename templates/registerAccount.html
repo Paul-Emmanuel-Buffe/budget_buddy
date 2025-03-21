@@ -9,22 +9,23 @@
     </head>
     <body class="registerAccount">
         
-       {% if 'user' in session %}
-                <nav class="navbar">
-                    <div class="dock">   
-                        <a class="navbar-brand" href="{{ url_for('index') }}">Ma Banque</a>
-                        <div class="navbar-nav">
-                            <a class="nav-item active" href="{{ url_for('index') }}">Accueil</a>
-                            <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
-                            <a class="nav-item {% if request.endpoint == 'actions' %}active{% endif %}" href="{{ url_for('actions') }}">Filtrage</a> <!-- Nouvel onglet -->
-                            <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+
+        <nav class="navbar">
+            <div class="dock">
+                <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+                <div class="navbar-nav">
+                    <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
+                    {% if 'user' in session %}
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transactions</a>
+                        <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                        <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                        <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
                     {% else %}
-
+                        <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
                     {% endif %}
-                        </div>
-                    </div>
-               </nav>
-
+                </div>
+            </div>
+        </nav>
         <!-- Contenu principal de la page -->
         <div class="container registerAccount-form">
             <h1>Créer votre compte</h1>

@@ -9,17 +9,32 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class=" index">
-
+    <nav class="navbar">
+        <div class="dock">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+            <div class="navbar-nav">
+                <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
+                {% if 'user' in session %}
+                <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                {% else %}
+                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <h1>Votre banque : Notre argent</h1>
         <div class = "acceuil">
 
-            <form method="POST">
+            <form method="POST" action="{{ url_for('traitementConnexion') }}">
                 <h2>Identification</h2>
                 <label for="nom">Utilisateur:</label>
-                <input type="text" id="nom" name="nom" required>
+                <input type="mail" id="nom" name="email" required>
                 <label for="motDePasse">Mot de passe:</label>
-                <input type="password" id="motDePasse" name="motDePasse" required>
+                <input type="password" id="motDePasse" name="password" required>
                 <input type="submit" value="Se connecter">
             </form>
             {% if message %}
