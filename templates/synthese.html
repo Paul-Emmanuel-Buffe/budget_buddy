@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Synthèse</title>
+</head>
+<body class="synthese">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="dock">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+            <div class="navbar-nav">
+                {% if 'user' in session %}
+                    <a class="nav-item {% if request.endpoint == 'doTransactions' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transaction</a>
+                    <a class="nav-item {% if request.endpoint == 'affichage_compte' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                {% else %}
+                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+</body>
+</html>

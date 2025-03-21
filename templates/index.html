@@ -13,18 +13,19 @@
         <div class="dock">
             <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
             <div class="navbar-nav">
-                <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
                 {% if 'user' in session %}
                 <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transactions</a>
                     <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
                     <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
                     <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
-                {% else %}
+                    {% else %}
                     <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
                 {% endif %}
             </div>
         </div>
     </nav>
+    
     <div class="container">
         <h1>Votre banque : Notre argent</h1>
         <div class = "acceuil">

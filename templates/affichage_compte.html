@@ -13,11 +13,12 @@
         <div class="dock">
             <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
             <div class="navbar-nav">
-                <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
                     <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
                     <a class="nav-item {% if request.endpoint == 'actions' %}active{% endif %}" href="{{ url_for('actions') }}">Filtrage</a> <!-- Nouvel onglet -->
-                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                    <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
                     <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+
 
             </div>
         </div>
