@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Vos Transactions</title>
+</head>
+<body class="actions">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="dock">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+            <div class="navbar-nav">
+                {% if 'user' in session %}
+                    <a class="nav-item {% if request.endpoint == 'doTransactions' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transaction</a>
+                    <a class="nav-item {% if request.endpoint == 'affichage_compte' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
+                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                {% else %}
+                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- FILTRE DES TRANSACTIONS -->
+    <section class="filter-section">
+        <h2>Filtrer vos transactions</h2>
+        <form method="GET" action="{{ url_for('affichage_compte') }}">
+            <label for="date">Date :</label>
+            <input type="date" id="date" name="date" value="{{ request.args.get('date', '') }}">
+
+            <label for="categorie">Catégorie :</label>
+            <select id="categorie" name="categorie">
+                <option value="">Toutes</option>
+                {% for cat_id, cat_name in categories.items() %}
+                    <option value="{{ cat_id }}" {% if request.args.get('categorie') == cat_id|string %}selected{% endif %}>
+                        {{ cat_name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="type">Type :</label>
+            <select id="type" name="type">
+                <option value="">Tous</option>
+                {% for type_id, type_name in types.items() %}
+                    <option value="{{ type_id }}" {% if request.args.get('type') == type_id|string %}selected{% endif %}>
+                        {{ type_name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="date_debut">De :</label>
+            <input type="date" id="date_debut" name="date_debut" value="{{ request.args.get('date_debut', '') }}">
+
+            <label for="date_fin">À :</label>
+            <input type="date" id="date_fin" name="date_fin" value="{{ request.args.get('date_fin', '') }}">
+
+            <label for="tri_montant">Tri par montant :</label>
+            <select id="tri_montant" name="tri_montant">
+                <option value="">Par défaut</option>
+                <option value="croissant" {% if request.args.get('tri_montant') == 'croissant' %}selected{% endif %}>Croissant</option>
+                <option value="decroissant" {% if request.args.get('tri_montant') == 'decroissant' %}selected{% endif %}>Décroissant</option>
+            </select>
+
+            <button type="submit">Filtrer</button>
+        </form>
+    </section>
+
+    <!-- TABLEAU DES TRANSACTIONS -->
+    <section class="transaction-section">
+        <h2>Vos Transactions</h2>
+        
+        {% if transactions %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th>Opérations</th>
+                        <th>Montant</th>
+                        <th>Date</th>
+                        <th>Catégorie</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction['reference'] }}</td>
+                            <td>{{ transaction['description'] }}</td>
+                            <td>{{ transaction['montant'] }} €</td>
+                            <td>{{ transaction['dateTransaction'] }}</td>
+                            <td>{{ transaction['categorie'] or 'Non classé' }}</td>
+                            <td>{{ transaction['type_transaction'] or 'Non défini' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Aucune transaction trouvée.</p>
+        {% endif %}
+    </section>
+
+</body>
+</html>

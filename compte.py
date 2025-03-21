@@ -20,8 +20,8 @@ class Account:
     
     def read(self, utilisateur):
         print('utilisateur : ', utilisateur)
-        query = 'select * from compte where idUtilisateur = %s;'
-        self.cursor.execute(query, (utilisateur,))
+        query = 'select * from compte where idUtilisateur = %s'
+        self.cursor.execute(query, (utilisateur, ))
         accounts = []
         for i in self.cursor:
             account = {
@@ -31,10 +31,24 @@ class Account:
                 }
             accounts.append(account)
         return accounts
+    
+    def readAccounts(self, utilisateur, compte):
+        print('utilisateur : ', utilisateur)
+        query = 'select * from compte where idUtilisateur = %s and idCompte = %s'
+        self.cursor.execute(query, (utilisateur, compte))
+        accountsUser = []
+        for i in self.cursor:
+            accountUser = {
+                'accountNumber':i[0],
+                'montant':i[1],
+                'nom_utilisateur':i[2],
+                }
+            accountsUser.append(accountUser)
+        return accountsUser
         
-    def update(self, montant):
-        query = 'update compte set montant= %s where id = %s'
-        self.cursor.execute(query, (montant))
+    def update(self, montant, compte):
+        query = 'update compte set montant= %s where idCompte = %s'
+        self.cursor.execute(query, (montant, compte))
         self.myDb.commit()
 
     def close_connection(self):

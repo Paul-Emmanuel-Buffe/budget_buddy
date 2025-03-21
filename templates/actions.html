@@ -13,10 +13,11 @@
         <div class="dock">
             <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
             <div class="navbar-nav">
-                <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
                 {% if 'user' in session %}
+                <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transactions</a>
                     <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
                     <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
                     <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
                 {% else %}
                     <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
@@ -45,7 +46,6 @@
                     <option value="3">Loyer</option>
                     <option value="4">Factures</option>
                     <option value="5">Loisirs</option>
-                    <option value="5">Pot de vin</option>
                 </select>
             </div>
 
@@ -54,9 +54,9 @@
                 <label for="type">Type de transaction :</label>
                 <select id="type" name="type" class="form-control">
                     <option value="">Tous les types</option>
-                    <option value="dépense">Dépense</option>
-                    <option value="revenu">Revenu</option>
-                    <option value="transfert">Transfert</option> <!-- Nouvelle option -->
+                    <option value="2">Dépense</option>
+                    <option value="1">Revenu</option>
+                    <option value="3">Transfert</option>
                 </select>
             </div>
 
