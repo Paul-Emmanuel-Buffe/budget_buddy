@@ -6,12 +6,16 @@ import secrets
 from datetime import timedelta
 import pandas as pd
 from compte import Account
+from type import Type
+from category import Category
 
 app = Flask(__name__)
 app.secret_key = 'aloha'
 app.permanent_session_lifetime = timedelta(minutes=60)
 user = User()
 account = Account()
+type = Type()
+categorie = Category()
 
 @app.route('/simuler_connexion')
 def simuler_connexion():
@@ -96,10 +100,7 @@ def registerAccount():
 def action():
     return render_template('action.html')
 
-@app.route('/listAccount')
-def listAccount():
-    Data = account.read(session['idUtilisateur'])
-    return render_template('listAccount.html', data=Data)
+
 
 @app.route('/traitementregisterAccount', methods=["POST"])
 def traitementregisterAccount():
@@ -153,23 +154,23 @@ def logout():
     flash('Vous avez été déconnecté', 'info')
     return redirect(url_for('index'))
 
-
+@app.route('/listAccount')
+def listAccount():
+    Data = account.read(session['idUtilisateur'])
+    return render_template('listAccount.html', data=Data)
 
 @app.route('/doTransaction')
 def doTransactions():
-    return render_template('doTransaction.html')
 
+    ## date = annee mois jour ##
 
-
-
-
-
-
-
-
-
-
-
+    eType = type.read()
+    eCategorie = categorie.read()
+    listAc = account.read(session['idUtilisateur'])
+    print('account : ',listAc)
+    print('type : ', eType)
+    print('categorie : ', eCategorie)
+    return render_template('doTransaction.html', account=listAc, categorie=eCategorie, type=eType)
 
 
 
