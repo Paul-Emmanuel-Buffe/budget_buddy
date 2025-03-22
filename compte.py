@@ -18,14 +18,20 @@ class Account:
         self.myDb.commit()
 
     
-    def read(self):
-        self.cursor.execute('select * from compte;')
+    def read(self, utilisateur):
+        print('utilisateur : ', utilisateur)
+        query = 'select * from compte where idUtilisateur = %s;'
+        self.cursor.execute(query, (utilisateur,))
+        accounts = []
         for i in self.cursor:
             account = {
                 'accountNumber':i[0],
                 'montant':i[1],
                 'nom_utilisateur':i[2],
                 }
+            accounts.append(account)
+        return accounts
+        
             
         
     def update(self, montant):

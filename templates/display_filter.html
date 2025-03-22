@@ -5,105 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Vos Transactions</title>
 </head>
 <body class="actions">
 
     <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="dock">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
-            <div class="navbar-nav">
-                {% if 'user' in session %}
-                    <a class="nav-item {% if request.endpoint == 'doTransactions' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transaction</a>
-                    <a class="nav-item {% if request.endpoint == 'affichage_compte' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
-                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
-                    <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
-                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
-                {% else %}
-                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
-                {% endif %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if 'user' in session %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'doTransactions' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transaction</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'affichage_compte' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
 
     <!-- FILTRE DES TRANSACTIONS -->
-    <section class="filter-section">
-        <h2>Filtrer vos transactions</h2>
-        <form method="GET" action="{{ url_for('affichage_compte') }}">
-            <label for="date">Date :</label>
-            <input type="date" id="date" name="date" value="{{ request.args.get('date', '') }}">
-
-            <label for="categorie">Catégorie :</label>
-            <select id="categorie" name="categorie">
-                <option value="">Toutes</option>
-                {% for cat_id, cat_name in categories.items() %}
-                    <option value="{{ cat_id }}" {% if request.args.get('categorie') == cat_id|string %}selected{% endif %}>
-                        {{ cat_name }}
-                    </option>
-                {% endfor %}
-            </select>
-
-            <label for="type">Type :</label>
-            <select id="type" name="type">
-                <option value="">Tous</option>
-                {% for type_id, type_name in types.items() %}
-                    <option value="{{ type_id }}" {% if request.args.get('type') == type_id|string %}selected{% endif %}>
-                        {{ type_name }}
-                    </option>
-                {% endfor %}
-            </select>
-
-            <label for="date_debut">De :</label>
-            <input type="date" id="date_debut" name="date_debut" value="{{ request.args.get('date_debut', '') }}">
-
-            <label for="date_fin">À :</label>
-            <input type="date" id="date_fin" name="date_fin" value="{{ request.args.get('date_fin', '') }}">
-
-            <label for="tri_montant">Tri par montant :</label>
-            <select id="tri_montant" name="tri_montant">
-                <option value="">Par défaut</option>
-                <option value="croissant" {% if request.args.get('tri_montant') == 'croissant' %}selected{% endif %}>Croissant</option>
-                <option value="decroissant" {% if request.args.get('tri_montant') == 'decroissant' %}selected{% endif %}>Décroissant</option>
-            </select>
-
-            <button type="submit">Filtrer</button>
+    <section class="container mt-4">
+        <h2 class="text-center mb-4">Filtrer vos transactions</h2>
+        <form method="GET" action="{{ url_for('affichage_compte') }}" class="row g-3">
+            <div class="col-md-3">
+                <label for="date" class="form-label">Date :</label>
+                <input type="date" id="date" name="date" value="{{ request.args.get('date', '') }}" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="categorie" class="form-label">Catégorie :</label>
+                <select id="categorie" name="categorie" class="form-select">
+                    <option value="">Toutes</option>
+                    {% for cat_id, cat_name in categories.items() %}
+                        <option value="{{ cat_id }}" {% if request.args.get('categorie') == cat_id|string %}selected{% endif %}>
+                            {{ cat_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="type" class="form-label">Type :</label>
+                <select id="type" name="type" class="form-select">
+                    <option value="">Tous</option>
+                    {% for type_id, type_name in types.items() %}
+                        <option value="{{ type_id }}" {% if request.args.get('type') == type_id|string %}selected{% endif %}>
+                            {{ type_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="date_debut" class="form-label">De :</label>
+                <input type="date" id="date_debut" name="date_debut" value="{{ request.args.get('date_debut', '') }}" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="date_fin" class="form-label">À :</label>
+                <input type="date" id="date_fin" name="date_fin" value="{{ request.args.get('date_fin', '') }}" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="tri_montant" class="form-label">Tri par montant :</label>
+                <select id="tri_montant" name="tri_montant" class="form-select">
+                    <option value="">Par défaut</option>
+                    <option value="croissant" {% if request.args.get('tri_montant') == 'croissant' %}selected{% endif %}>Croissant</option>
+                    <option value="decroissant" {% if request.args.get('tri_montant') == 'decroissant' %}selected{% endif %}>Décroissant</option>
+                </select>
+            </div>
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </div>
         </form>
     </section>
 
     <!-- TABLEAU DES TRANSACTIONS -->
-    <section class="transaction-section">
-        <h2>Vos Transactions</h2>
-        
+    <section class="container mt-4">
+        <h2 class="text-center mb-4">Vos Transactions</h2>
         {% if transactions %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Référence</th>
-                        <th>Opérations</th>
-                        <th>Montant</th>
-                        <th>Date</th>
-                        <th>Catégorie</th>
-                        <th>Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for transaction in transactions %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
                         <tr>
-                            <td>{{ transaction['reference'] }}</td>
-                            <td>{{ transaction['description'] }}</td>
-                            <td>{{ transaction['montant'] }} €</td>
-                            <td>{{ transaction['dateTransaction'] }}</td>
-                            <td>{{ transaction['categorie'] or 'Non classé' }}</td>
-                            <td>{{ transaction['type_transaction'] or 'Non défini' }}</td>
+                            <th>Référence</th>
+                            <th>Opérations</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Catégorie</th>
+                            <th>Type</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction['reference'] }}</td>
+                                <td>{{ transaction['description'] }}</td>
+                                <td>{{ transaction['montant'] }} €</td>
+                                <td>{{ transaction['dateTransaction'] }}</td>
+                                <td>{{ transaction['categorie'] or 'Non classé' }}</td>
+                                <td>{{ transaction['type_transaction'] or 'Non défini' }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <p>Aucune transaction trouvée.</p>
+            <p class="text-center">Aucune transaction trouvée.</p>
         {% endif %}
     </section>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

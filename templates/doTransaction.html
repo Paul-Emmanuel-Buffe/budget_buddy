@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <title>Mon compte Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class=" index">
+    <nav class="navbar">
+        <div class="dock">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+            <div class="navbar-nav">
+                <a class="nav-item {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Accueil</a>
+                {% if 'user' in session %}
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('affichage_compte') }}">Transactions</a>
+                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+                {% else %}
+                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Faire une transaction</h1>
+        <div class = "acceuil">
+            <form method="POST" action="{{ url_for('traitementConnexion') }}">
+                <h2>transactions</h2>
+                <label>compte concerner</label>
+                <select name="compte" id="">
+                    {% for k in account %}
+                        <option value="{{k.idCompte}}">{{k.montant}}</option>
+                    {% endfor %}                    
+                </select>
+                <label for="nom">description:</label>
+                <input type="text" id="nom" name="description" required>
+                <label for="motDePasse">montant:</label>
+                <input type="number" id="motDePasse" name="montant" required>
+                <label for="motDePasse">categorie : </label>
+                <select name="type" id="">
+                    {% for j in categorie %}
+                        <option value="{{j.idCategorie}}">{{j.titre}}</option>
+                    {% endfor %}  
+                </select>
+                <label for="motDePasse">type : </label>
+                <select name="type" id="">
+                    {% for i in type %}
+                        <option value="{{i.idType}}">{{i.titre}}</option>
+                    {% endfor %}                    
+                </select>
+                <input type="submit" value="valider">
+            </form>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

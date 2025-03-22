@@ -53,7 +53,7 @@ def affichage_compte():
 
         # Construire la requête SQL en fonction des filtres
         query = "SELECT description, montant, dateTransaction FROM transaction WHERE idCompte = %s"
-        params = [session['idUtilisateur']]
+        params = [session['idUtilisateur'],]
 
         # Ajouter des filtres à la requête si nécessaire
         if date:  # Si une date spécifique est fournie
@@ -82,100 +82,29 @@ def affichage_compte():
         print(f"With params: {params}")
 
         # Exécuter la requête SQL
-        user.cursor.execute(query, tuple(params))  # Assurez-vous de passer un tuple de paramètres
+    try:
+        user.cursor.execute(query, params)
         results = user.cursor.fetchall()
-
+    except Exception as e:
+        print(f"Database error: {e}")
+        return "An error occurred while fetching data.", 500
         # Obtenez les noms des colonnes
-        columns = [desc[0] for desc in user.cursor.description]
+    columns = [desc[0] for desc in user.cursor.description]
+
 
         # Création d'un DataFrame pandas pour formater les données
-        df = pd.DataFrame(results, columns=columns)
-        df.rename(columns={
+    df = pd.DataFrame(results, columns=columns)
+    df.rename(columns={
             'description': 'Opérations',
             'montant': 'Montant',
             'dateTransaction': 'Date'
         }, inplace=True)
 
         # Conversion du DataFrame en HTML
-        df_html = df.to_html(classes='table table-striped', index=False)
+    df_html = df.to_html(classes='table table-striped', index=False)
 
-        return render_template('affichage_compte.html', table=df_html)
+    return render_template('affichage_compte.html', table=df_html)
     
-@app.route('/display_filter')
-def display_filter():
-    # Vérifie si l'utilisateur est connecté
-    if 'user' not in session:
-        return redirect(url_for('index'))
-
-    # S'assurer que la connexion est active
-    user.ensure_connection()
-
-    # Récupérer les paramètres de la requête
-    date = request.args.get('date')
-    categorie = request.args.get('categorie')
-    type_transaction = request.args.get('type')
-    tri_montant = request.args.get('tri_montant')
-    date_debut = request.args.get('date_debut')
-    date_fin = request.args.get('date_fin')
-
-    # Construction de la requête SQL avec jointures pour afficher plus d'infos
-    query = """
-        SELECT t.reference, t.description, t.montant, t.dateTransaction, 
-               c.titre AS categorie, ty.titre AS type_transaction
-        FROM transaction t
-        LEFT JOIN categorie c ON t.idCategorie = c.idCategorie
-        LEFT JOIN type ty ON t.idType = ty.idType
-        WHERE t.idCompte = %s
-    """
-    params = [session['idUtilisateur']]
-
-    # Ajout des filtres à la requête si nécessaire
-    if date:
-        query += " AND t.dateTransaction = %s"
-        params.append(date)
-
-    if categorie:
-        query += " AND t.idCategorie = %s"
-        params.append(categorie)
-
-    if type_transaction:
-        query += " AND t.idType = %s"
-        params.append(type_transaction)
-
-    if date_debut and date_fin:
-        query += " AND t.dateTransaction BETWEEN %s AND %s"
-        params.extend([date_debut, date_fin])
-
-    # Ajout du tri si demandé, sinon tri par date décroissante
-    if tri_montant:
-        query += f" ORDER BY t.montant {'ASC' if tri_montant == 'croissant' else 'DESC'}"
-    else:
-        query += " ORDER BY t.dateTransaction DESC"
-
-    # Débogage : afficher la requête et les paramètres
-    print(f"Executing query: {query}")
-    print(f"With params: {params}")
-
-    try:
-        # Exécuter la requête SQL
-        user.cursor.execute(query, tuple(params))
-        results = user.cursor.fetchall()
-
-        # Récupérer dynamiquement les noms des colonnes
-        columns = [desc[0] for desc in user.cursor.description]
-
-        # Création du DataFrame pandas pour un affichage dynamique
-        df = pd.DataFrame(results, columns=columns)
-
-        # Conversion du DataFrame en HTML (avec classes Bootstrap pour le style)
-        df_html = df.to_html(classes='table table-striped table-bordered', index=False)
-
-        return render_template('dislay_filter.html', table=df_html)
-
-    except Exception as e:
-        print(f"Database error: {e}")
-        return "Une erreur est survenue lors du chargement des données.", 500    
-
 @app.route("/register")
 def register():
     return render_template("register.html")
@@ -188,10 +117,57 @@ def registerAccount():
 def action():
     return render_template('action.html')
 
-@app.route('/listAccount')
-def listAccount():
-    Data = account.read(session['idUtilisateur'])
-    return render_template('listAccount.html', data=Data)
+@app.route('/synthese')
+def synthese():
+    # Vérifiez si l'utilisateur est connecté
+    if 'user' not in session:
+        return redirect(url_for('index'))
+
+    try:
+        # S'assurer que la connexion est active
+        user.ensure_connection()
+
+        # Récupérer les comptes de l'utilisateur
+        query = "SELECT idCompte, montant FROM compte WHERE idUtilisateur = %s"
+        params = (session['idUtilisateur'],)  # Tuple avec une virgule
+
+        # Exécuter la requête SQL
+        user.cursor.execute(query, params)
+        results = user.cursor.fetchall()
+
+        # Obtenir les noms des colonnes
+        columns = [desc[0] for desc in user.cursor.description]
+
+        # Création d'un DataFrame pandas pour formater les données
+        df = pd.DataFrame(results, columns=columns)
+        df.rename(columns={
+            'idCompte': 'Numéro du Compte',
+            'montant': 'Solde',
+        }, inplace=True)
+
+        # Calculer le total des soldes
+        total_solde = df['Solde'].sum()
+
+        # Ajouter une ligne pour le total
+        total_row = pd.DataFrame({
+            'Numéro du Compte': ['Total'],
+            'Solde': [total_solde]
+        })
+        df = pd.concat([df, total_row], ignore_index=True)
+
+        # Conversion du DataFrame en HTML
+        df_html = df.to_html(classes='table table-striped', index=False)
+
+        return render_template('synthese.html', table=df_html)
+
+    except Exception as e:
+        print(f"Erreur : {e}")
+        return "Une erreur s'est produite lors de la récupération des données.", 500
+
+    finally:
+        # Fermer la connexion à la base de données
+        user.close_connection()
+
 
 @app.route('/traitementregisterAccount', methods=["POST"])
 def traitementregisterAccount():
@@ -238,9 +214,7 @@ def traitementConnexion():
 def actions():
     return render_template('actions.html')
 
-@app.route("/synthese")
-def synthese():
-    return render_template('synthese.html')
+
 
 @app.route('/logout')
 def logout():
@@ -252,6 +226,26 @@ def logout():
 @app.route('/doTransaction')
 def doTransactions():
     return render_template('doTransaction.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 
