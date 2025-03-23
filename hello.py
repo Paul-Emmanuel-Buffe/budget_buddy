@@ -25,6 +25,7 @@ transac = Transaction()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """Page d'accueil avec authentification."""
     message = ""
     if request.method == 'POST':
         nom = request.form.get('nom')
@@ -42,48 +43,49 @@ def index():
 
     return render_template('index.html', message=message)
 
+
 @app.route('/traitementTransaction', methods=["POST"])
 def traitementTransaction():
+    """Traite les transactions (retrait, versement, virement)."""
     if request.method == "POST":
-            
-            compte = request.form.get('compte')
-            compteVir = request.form['comptevirement']
-            description = request.form['description']
-            descriptionvir = request.form['descriptionvir']
-            montant = float(request.form['montant'])
-            categorie = request.form['category']
-            type = request.form['type']
-            dateTrans = date.today()
+        compte = request.form.get('compte')
+        compteVir = request.form['comptevirement']
+        description = request.form['description']
+        descriptionvir = request.form['descriptionvir']
+        montant = float(request.form['montant'])
+        categorie = request.form['category']
+        type = request.form['type']
+        dateTrans = date.today()
 
-            print(compte)
-            accounts = account.readAccounts(session['idUtilisateur'], compte)
-            accountver = account.readAccounts(session['idUtilisateur'], compteVir)
+        print(compte)
+        accounts = account.readAccounts(session['idUtilisateur'], compte)
+        accountver = account.readAccounts(session['idUtilisateur'], compteVir)
 
-            if type == '1':
-                calculRetrait = accounts[0]['montant'] - montant
-                transac.create(description, montant, dateTrans, categorie, type, compte)
-                account.update(calculRetrait, compte)
-            elif type == '2':
-                calculvers = accounts[0]['montant'] + montant
-                transac.create(description, montant, dateTrans, categorie, type, compte)
-                account.update(calculvers, compte)
-            elif type == '3':
-                calculRetrait = accounts[0]['montant'] - montant
-                transac.create(description, montant, dateTrans, categorie, type, compte)
-                account.update(calculRetrait, compte)
+        if type == '1':  # Retrait
+            calculRetrait = accounts[0]['montant'] - montant
+            transac.create(description, montant, dateTrans, categorie, type, compte)
+            account.update(calculRetrait, compte)
+        elif type == '2':  # Versement
+            calculvers = accounts[0]['montant'] + montant
+            transac.create(description, montant, dateTrans, categorie, type, compte)
+            account.update(calculvers, compte)
+        elif type == '3':  # Virement
+            # Débit du compte source
+            calculRetrait = accounts[0]['montant'] - montant
+            transac.create(description, montant, dateTrans, categorie, type, compte)
+            account.update(calculRetrait, compte)
 
-                calculvers = accountver[0]['montant'] + montant
-                transac.create(descriptionvir, montant, dateTrans, categorie, type, compteVir)
-                account.update(calculvers, compteVir)
-                
+            # Crédit du compte destinataire
+            calculvers = accountver[0]['montant'] + montant
+            transac.create(descriptionvir, montant, dateTrans, categorie, type, compteVir)
+            account.update(calculvers, compteVir)
 
-            
-
-            return redirect(url_for('doTransactions'))
+        return redirect(url_for('doTransactions'))
 
 
 @app.route('/affichage_compte')
 def affichage_compte():
+    """Affiche les détails du compte avec filtres possibles."""
     # Vérifiez si l'utilisateur est connecté
     if 'user' not in session:
         return redirect(url_for('index'))
@@ -102,7 +104,7 @@ def affichage_compte():
 
         # Construire la requête SQL en fonction des filtres
         query = "SELECT description, montant, dateTransaction FROM transaction WHERE idCompte = %s"
-        params = [session['idUtilisateur'],]
+        params = [session['idUtilisateur']]
 
         # Ajouter des filtres à la requête si nécessaire
         if date:  # Si une date spécifique est fournie
@@ -130,44 +132,52 @@ def affichage_compte():
         print(f"Executing query: {query}")
         print(f"With params: {params}")
 
-        # Exécuter la requête SQL
     try:
+        # Exécuter la requête SQL
         user.cursor.execute(query, params)
         results = user.cursor.fetchall()
-    except Exception as e:
-        print(f"Database error: {e}")
-        return "An error occurred while fetching data.", 500
+        
         # Obtenez les noms des colonnes
-    columns = [desc[0] for desc in user.cursor.description]
-
+        columns = [desc[0] for desc in user.cursor.description]
 
         # Création d'un DataFrame pandas pour formater les données
-    df = pd.DataFrame(results, columns=columns)
-    df.rename(columns={
+        df = pd.DataFrame(results, columns=columns)
+        df.rename(columns={
             'description': 'Opérations',
             'montant': 'Montant',
             'dateTransaction': 'Date'
         }, inplace=True)
 
         # Conversion du DataFrame en HTML
-    df_html = df.to_html(classes='table table-striped', index=False)
+        df_html = df.to_html(classes='table table-striped', index=False)
 
-    return render_template('affichage_compte.html', table=df_html)
-    
+        return render_template('affichage_compte.html', table=df_html)
+    except Exception as e:
+        print(f"Database error: {e}")
+        return "An error occurred while fetching data.", 500
+
+
 @app.route("/register")
 def register():
+    """Page d'inscription."""
     return render_template("register.html")
+
 
 @app.route("/registerAccount")
 def registerAccount():
+    """Page de création de compte bancaire."""
     return render_template("registerAccount.html")
+
 
 @app.route('/action')
 def action():
+    """Page d'actions disponibles."""
     return render_template('action.html')
+
 
 @app.route('/synthese', methods=['GET', 'POST'])
 def synthese():
+    """Page de synthèse avec graphiques et tableaux."""
     # Vérifiez si l'utilisateur est connecté
     if 'user' not in session:
         return redirect(url_for('index'))
@@ -248,14 +258,17 @@ def synthese():
 
 @app.route('/traitementregisterAccount', methods=["POST"])
 def traitementregisterAccount():
+    """Traite la création d'un nouveau compte bancaire."""
     if request.method == "POST":
         montant = request.form['montant']
         account.create(montant, session['idUtilisateur'])
         return redirect(url_for('index'))
     return redirect(url_for('index'))
 
+
 @app.route('/traitement', methods=["POST"])
 def traitement():
+    """Traite l'inscription d'un nouvel utilisateur."""
     if request.method == "POST":
         nom = request.form['nom']
         prenom = request.form['prenom']
@@ -268,8 +281,10 @@ def traitement():
         user.create(nom, prenom, email, hash_hex, salt, admin)
         return redirect(url_for('index'))
 
+
 @app.route('/traitementConnexion', methods=["POST"])
 def traitementConnexion():
+    """Traite la connexion d'un utilisateur."""
     if request.method == "POST":
         email = request.form['email']
         infoUtilisateur = user.read_connection(email)
@@ -287,37 +302,26 @@ def traitementConnexion():
             flash('Le mail ou le mot de passe ne sont pas corrects')
     return redirect(url_for('index'))
 
+
 @app.route("/actions")
 def actions():
+    """Page d'actions multiples."""
     return render_template('actions.html')
+
 
 @app.route('/doTransaction')
 def doTransactions():
+    """Page pour effectuer une transaction."""
     return render_template('doTransaction.html')
 
 
 @app.route('/logout')
 def logout():
+    """Déconnexion de l'utilisateur."""
     session.pop('user', None)
     session.clear()
     flash('Vous avez été déconnecté', 'info')
     return redirect(url_for('index'))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
