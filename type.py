@@ -1,6 +1,6 @@
 import mysql.connector
 
-class Category:
+class Type:
     def __init__(self):
         self.connect_db()
     
@@ -40,15 +40,15 @@ class Category:
        
     def read(self):
         self.ensure_connection()
-        self.cursor.execute('select idCategorie, titre from categorie;')
-        categories = []
+        self.cursor.execute('select idType, titre from type;')
+        types = []
         for i in self.cursor:
-            categorie = {
-                'idCategorie': i[0],
+            type = {
+                'idType': i[0],
                 'titre': i[1],
             }
-            categories.append(categorie)
-        return categories
+            types.append(type)
+        return types
     
     def close_connection(self):
         """Fermer proprement la connexion"""

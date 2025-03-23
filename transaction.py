@@ -19,7 +19,7 @@ class Transaction:
             self.myDb = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="root",
+                password="cN06+#P34",
                 database="banque",
                 port=3306
             )

@@ -27,20 +27,28 @@
     <div class="container">
         <h1>Faire une transaction</h1>
         <div class = "acceuil">
-            <form method="POST" action="{{ url_for('traitementConnexion') }}">
+            <form method="POST" action="{{ url_for('traitementTransaction') }}">
                 <h2>transactions</h2>
-                <label>compte concerner</label>
+                <label>compte concerné</label>
                 <select name="compte" id="">
                     {% for k in account %}
-                        <option value="{{k.idCompte}}">{{k.montant}}</option>
+                        <option value="{{k.accountNumber}}">{{k.montant}}</option>
+                    {% endfor %}                    
+                </select>
+                <label>compte cible virement</label>
+                <select name="comptevirement" id="">
+                    {% for k in account %}
+                        <option value="{{k.accountNumber}}">{{k.montant}}</option>
                     {% endfor %}                    
                 </select>
                 <label for="nom">description:</label>
                 <input type="text" id="nom" name="description" required>
+                <label for="nom">description virement:</label>
+                <input type="text" id="nom" name="descriptionvir" required>
                 <label for="motDePasse">montant:</label>
-                <input type="number" id="motDePasse" name="montant" required>
+                <input type="number" step='0.01' id="motDePasse" name="montant" required>
                 <label for="motDePasse">categorie : </label>
-                <select name="type" id="">
+                <select name="category" id="">
                     {% for j in categorie %}
                         <option value="{{j.idCategorie}}">{{j.titre}}</option>
                     {% endfor %}  

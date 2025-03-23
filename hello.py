@@ -6,12 +6,20 @@ import secrets
 from datetime import timedelta
 import pandas as pd
 from compte import Account
+from type import Type
+from category import Category
+from datetime import date
+from transaction import Transaction
+from graph import GraphManager
 
 app = Flask(__name__)
 app.secret_key = 'aloha'
 app.permanent_session_lifetime = timedelta(minutes=60)
 user = User()
 account = Account()
+type = Type()
+categorie = Category()
+transac = Transaction()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -32,6 +40,46 @@ def index():
             message = "Please fill in all fields"
 
     return render_template('index.html', message=message)
+
+@app.route('/traitementTransaction', methods=["POST"])
+def traitementTransaction():
+    if request.method == "POST":
+            
+            compte = request.form.get('compte')
+            compteVir = request.form['comptevirement']
+            description = request.form['description']
+            descriptionvir = request.form['descriptionvir']
+            montant = float(request.form['montant'])
+            categorie = request.form['category']
+            type = request.form['type']
+            dateTrans = date.today()
+
+            print(compte)
+            accounts = account.readAccounts(session['idUtilisateur'], compte)
+            accountver = account.readAccounts(session['idUtilisateur'], compteVir)
+
+            if type == '1':
+                calculRetrait = accounts[0]['montant'] - montant
+                transac.create(description, montant, dateTrans, categorie, type, compte)
+                account.update(calculRetrait, compte)
+            elif type == '2':
+                calculvers = accounts[0]['montant'] + montant
+                transac.create(description, montant, dateTrans, categorie, type, compte)
+                account.update(calculvers, compte)
+            elif type == '3':
+                calculRetrait = accounts[0]['montant'] - montant
+                transac.create(description, montant, dateTrans, categorie, type, compte)
+                account.update(calculRetrait, compte)
+
+                calculvers = accountver[0]['montant'] + montant
+                transac.create(descriptionvir, montant, dateTrans, categorie, type, compteVir)
+                account.update(calculvers, compteVir)
+                
+
+            
+
+            return redirect(url_for('doTransactions'))
+
 
 @app.route('/affichage_compte')
 def affichage_compte():
@@ -158,7 +206,23 @@ def synthese():
         # Conversion du DataFrame en HTML
         df_html = df.to_html(classes='table table-striped', index=False)
 
-        return render_template('synthese.html', table=df_html)
+        # Instanciation de GraphManager
+        graph_manager = GraphManager()
+
+        # Récupération de l'ID utilisateur depuis la session
+        user_id = session['idUtilisateur']
+
+        # Génération du graphique
+        try:
+            print("Génération du graphique en cours...")  # Message de débogage
+            pie_chart = graph_manager.get_expense(user, user_id)  # Génère le graphique
+            print("Contenu de pie_chart :", pie_chart)  # Affiche la chaîne base64 dans la console
+        except Exception as e:
+            print(f"Erreur lors de la génération du graphique: {e}")
+            return "Une erreur est survenue lors de la génération du graphique.", 500
+
+        # Affichage de la page avec le graphique et le tableau
+        return render_template('synthese.html', table=df_html, pie_chart=pie_chart)
 
     except Exception as e:
         print(f"Erreur : {e}")
@@ -167,6 +231,7 @@ def synthese():
     finally:
         # Fermer la connexion à la base de données
         user.close_connection()
+
 
 
 @app.route('/traitementregisterAccount', methods=["POST"])
@@ -214,6 +279,9 @@ def traitementConnexion():
 def actions():
     return render_template('actions.html')
 
+@app.route('/doTransaction')
+def doTransactions():
+    return render_template('doTransaction.html')
 
 
 @app.route('/logout')
@@ -222,30 +290,6 @@ def logout():
     session.clear()
     flash('Vous avez été déconnecté', 'info')
     return redirect(url_for('index'))
-
-@app.route('/doTransaction')
-def doTransactions():
-    return render_template('doTransaction.html')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 
 

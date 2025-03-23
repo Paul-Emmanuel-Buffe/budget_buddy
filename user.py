@@ -23,6 +23,7 @@ class User:
                 database="banque",
                 port=3306
             )
+            
             self.cursor = self.myDb.cursor()
         except mysql.connector.Error as err:
             print(f"Erreur de connexion à la base de données: {err}")

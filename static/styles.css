@@ -136,7 +136,15 @@ body.synthese {
     justify-content: flex-start;
     align-items: center;
     margin: 0;
-    padding: 0;
+    padding-top: 70px;
+}
+
+.small-table {
+    transform: scale(0.5); /* 1/2.5 = 0.4, donc le tableau sera 2,5 fois plus petit */
+    transform-origin: top left; /* Conserve l'origine en haut à gauche */
+    width: 150%; /* Ajuste la largeur pour compenser la réduction */
+    height: 500%; /* Ajuste la hauteur pour compenser la réduction */
+    font-size: 35px; 
 }
 
 
