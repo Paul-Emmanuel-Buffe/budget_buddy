@@ -4,6 +4,7 @@ from user import User
 import hashlib
 import secrets
 from datetime import timedelta
+from datetime import datetime
 import pandas as pd
 from compte import Account
 from type import Type
@@ -165,7 +166,7 @@ def registerAccount():
 def action():
     return render_template('action.html')
 
-@app.route('/synthese')
+@app.route('/synthese', methods=['GET', 'POST'])
 def synthese():
     # Vérifiez si l'utilisateur est connecté
     if 'user' not in session:
@@ -174,6 +175,22 @@ def synthese():
     try:
         # S'assurer que la connexion est active
         user.ensure_connection()
+
+        # Récupérer les dates du formulaire si elles sont fournies
+        start_date = request.form.get('start_date')
+        end_date = request.form.get('end_date')
+
+        # Convertir les dates en objets datetime si elles sont fournies
+        if start_date and end_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        else:
+            start_date = None
+            end_date = None
+
+        # Log des dates pour débogage
+        print(f"start_date: {start_date}")
+        print(f"end_date: {end_date}")
 
         # Récupérer les comptes de l'utilisateur
         query = "SELECT idCompte, montant FROM compte WHERE idUtilisateur = %s"
@@ -215,8 +232,8 @@ def synthese():
         # Génération du graphique
         try:
             print("Génération du graphique en cours...")  # Message de débogage
-            pie_chart = graph_manager.get_expense(user, user_id)  # Génère le graphique
-            print("Contenu de pie_chart :", pie_chart)  # Affiche la chaîne base64 dans la console
+            pie_chart = graph_manager.get_expense(user, user_id, start_date, end_date)  # Génère le graphique avec les dates
+            
         except Exception as e:
             print(f"Erreur lors de la génération du graphique: {e}")
             return "Une erreur est survenue lors de la génération du graphique.", 500
@@ -225,13 +242,8 @@ def synthese():
         return render_template('synthese.html', table=df_html, pie_chart=pie_chart)
 
     except Exception as e:
-        print(f"Erreur : {e}")
-        return "Une erreur s'est produite lors de la récupération des données.", 500
-
-    finally:
-        # Fermer la connexion à la base de données
-        user.close_connection()
-
+        print(f"Erreur lors de la récupération des données: {e}")
+        return "Une erreur est survenue lors de la récupération des données.", 500
 
 
 @app.route('/traitementregisterAccount', methods=["POST"])

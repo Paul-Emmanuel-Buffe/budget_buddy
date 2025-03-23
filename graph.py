@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from matplotlib.figure import Figure
+from datetime import datetime
 
 class GraphManager:
 
@@ -47,7 +48,7 @@ class GraphManager:
 
         return f"data:image/png;base64,{img_data}"
 
-    def get_expense(self, user, user_id):
+    def get_expense(self, user, user_id, start_date=None, end_date=None):
         """Récupère les données depuis la BDD et génère le camembert"""
 
         try:
@@ -57,11 +58,19 @@ class GraphManager:
                 JOIN categorie c ON t.idCategorie = c.idCategorie
                 JOIN compte cpt ON t.idCompte = cpt.idCompte
                 WHERE cpt.idUtilisateur = %s AND t.idType = 2
-                GROUP BY c.titre
             """
 
+            # Ajout de la condition de date si les dates sont fournies
+            if start_date and end_date:
+                query += " AND t.date BETWEEN %s AND %s"
+                params = (user_id, start_date, end_date)
+            else:
+                params = (user_id,)
+
+            query += " GROUP BY c.titre"
+
             # Exécution de la requête
-            user.cursor.execute(query, (user_id,))
+            user.cursor.execute(query, params)
             results = user.cursor.fetchall()
 
             if not results:
@@ -76,3 +85,4 @@ class GraphManager:
         except Exception as e:
             print(f"Erreur lors de la génération du graphique: {e}")
             return self.generate_pie_chart(["Erreur"], [1], "Erreur lors de la récupération des données")
+
