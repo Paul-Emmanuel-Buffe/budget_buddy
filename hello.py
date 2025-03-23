@@ -312,7 +312,10 @@ def actions():
 @app.route('/doTransaction')
 def doTransactions():
     """Page pour effectuer une transaction."""
-    return render_template('doTransaction.html')
+    eType = type.read()
+    eCategorie = categorie.read()
+    listAc = account.read(session['idUtilisateur'])
+    return render_template('doTransaction.html', account=listAc, categorie=eCategorie, type=eType)
 
 
 @app.route('/logout')

@@ -38,47 +38,31 @@ class Transaction:
             # Reconnecter si la connexion est perdue
             self.connect_db()
     
-    def create(self):
+    def create(self,description, montant, dateTransaction, idCategorie, idType, idCompte):
         self.ensure_connection()
-        query = 'insert into utilisateur () values ();'
-        self.cursor.execute(query, ())
+        query = 'insert into transaction (description, montant, dateTransaction, idCategorie, idType, idCompte) values (%s,%s,%s,%s,%s,%s);'
+        self.cursor.execute(query, (description, montant, dateTransaction, idCategorie, idType, idCompte))
         self.myDb.commit()
     
-    def read(self):
+    def read(self, compte):
         self.ensure_connection()
-        self.cursor.execute('select nom,prenom,email from utilisateur;')
-        users = []
+        query = 'select * from transactions where idCompte = %s'
+        self.cursor.execute(query, (compte,))
+        transactions = []
         for i in self.cursor:
-            user = {
-                'nom': i[0],
-                'prenom': i[1],
-                'mail': i[2],
+            transaction = {
+                'reference': i[0],
+                'description': i[1],
+                'montant': i[2],
+                'dateTransaction': i[3],
+                'idCategorie': i[4],
+                'idType': i[5],
             }
-            users.append(user)
-        return users
+            transactions.append(transaction)
+        return transactions
     
-    def read_connection(self, mail):
-        self.ensure_connection()
-        user = []
-        query = 'select idUtilisateur, nom, email, motDePasse, salt from utilisateur where email = %s;'
-        self.cursor.execute(query, (mail,))
-        for i in self.cursor:
-            for j, k in enumerate(i):
-                user.append(k)
-        return user
     
-    def update_retrait(self, nom, prenom, email, id):
-        self.ensure_connection()
-        query = 'update utilisateur set nom = %s, prenom = %s, email = %s where idUtilisateur = %s'
-        self.cursor.execute(query, (nom, prenom, email, id))
-        self.myDb.commit()
-    
-    def update_versement(self, montant):
-        self.ensure_connection()
-        query = ''
-        self.cursor.execute(query, (montant))
-        self.myDb.commit()
-    
+        
 
     def close_connection(self):
         """Fermer proprement la connexion"""
