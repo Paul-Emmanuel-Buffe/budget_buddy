@@ -12,45 +12,46 @@ class Account:
         self.cursor = self.myDb.cursor()
 
     def create(self, montant, idUtilisateur):
-
-        query = 'insert into compte (montant, idUtilisateur) values (%s,%s);'
+        # Crée un nouveau compte
+        query = 'INSERT INTO compte (montant, idUtilisateur) VALUES (%s, %s);'
         self.cursor.execute(query, (montant, idUtilisateur))
         self.myDb.commit()
 
-    
     def read(self, utilisateur):
-        print('utilisateur : ', utilisateur)
-        query = 'select * from compte where idUtilisateur = %s'
-        self.cursor.execute(query, (utilisateur, ))
+        # Récupère tous les comptes d'un utilisateur
+        query = 'SELECT * FROM compte WHERE idUtilisateur = %s'
+        self.cursor.execute(query, (utilisateur,))
         accounts = []
         for i in self.cursor:
             account = {
-                'accountNumber':i[0],
-                'montant':i[1],
-                'nom_utilisateur':i[2],
-                }
+                'accountNumber': i[0],
+                'montant': i[1],
+                'nom_utilisateur': i[2],
+            }
             accounts.append(account)
         return accounts
     
     def readAccounts(self, utilisateur, compte):
-        print('utilisateur : ', utilisateur)
-        query = 'select * from compte where idUtilisateur = %s and idCompte = %s'
+        # Récupère un compte spécifique d'un utilisateur
+        query = 'SELECT * FROM compte WHERE idUtilisateur = %s AND idCompte = %s'
         self.cursor.execute(query, (utilisateur, compte))
         accountsUser = []
         for i in self.cursor:
             accountUser = {
-                'accountNumber':i[0],
-                'montant':i[1],
-                'nom_utilisateur':i[2],
-                }
+                'accountNumber': i[0],
+                'montant': i[1],
+                'nom_utilisateur': i[2],
+            }
             accountsUser.append(accountUser)
         return accountsUser
         
     def update(self, montant, compte):
-        query = 'update compte set montant= %s where idCompte = %s'
+        # Met à jour le montant d'un compte
+        query = 'UPDATE compte SET montant = %s WHERE idCompte = %s'
         self.cursor.execute(query, (montant, compte))
         self.myDb.commit()
 
     def close_connection(self):
+        # Ferme les connexions à la base de données
         self.cursor.close()
         self.myDb.close()

@@ -31,22 +31,22 @@ class Transaction:
     def ensure_connection(self):
         """S'assurer que la connexion est active"""
         try:
-            # Vérifier si la connexion est active avec une requête simple
             self.cursor.execute("SELECT 1")
             self.cursor.fetchone()
         except:
-            # Reconnecter si la connexion est perdue
             self.connect_db()
     
-    def create(self,description, montant, dateTransaction, idCategorie, idType, idCompte):
+    def create(self, description, montant, dateTransaction, idCategorie, idType, idCompte):
+        """Créer une nouvelle transaction"""
         self.ensure_connection()
-        query = 'insert into transaction (description, montant, dateTransaction, idCategorie, idType, idCompte) values (%s,%s,%s,%s,%s,%s);'
+        query = 'INSERT INTO transaction (description, montant, dateTransaction, idCategorie, idType, idCompte) VALUES (%s, %s, %s, %s, %s, %s);'
         self.cursor.execute(query, (description, montant, dateTransaction, idCategorie, idType, idCompte))
         self.myDb.commit()
     
     def read(self, compte):
+        """Lire les transactions d'un compte"""
         self.ensure_connection()
-        query = 'select * from transactions where idCompte = %s'
+        query = 'SELECT * FROM transactions WHERE idCompte = %s'
         self.cursor.execute(query, (compte,))
         transactions = []
         for i in self.cursor:
@@ -60,9 +60,6 @@ class Transaction:
             }
             transactions.append(transaction)
         return transactions
-    
-    
-        
 
     def close_connection(self):
         """Fermer proprement la connexion"""

@@ -4,29 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Synthèse des Comptes</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Police Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Lien vers ton fichier CSS personnalisé -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="synthese">
-
-    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <!-- Logo ou nom de l'application -->
             <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
-            <!-- Bouton pour les écrans mobiles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- Liens de navigation -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     {% if 'user' in session %}
-                        <!-- Liens pour les utilisateurs connectés -->
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'doTransactions' %}active{% endif %}" href="{{ url_for('doTransactions') }}">Faire une transaction</a>
                         </li>
@@ -43,7 +34,6 @@
                             <a class="nav-link" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
                         </li>
                     {% else %}
-                        <!-- Liens pour les utilisateurs non connectés -->
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
                         </li>
@@ -56,44 +46,40 @@
     <div class="container mt-5">
         <h1 class="text-center mb-4">Synthèse des Comptes</h1>
 
-       
-
-        <!-- Structure en deux colonnes avec un petit espace -->
         <div class="row align-items-center">
-            <!-- Colonne du tableau -->
             <div class="col-md-5">
                 <div class="table-responsive">
                     {{ table | safe }}
                 </div>
             </div>
 
-            <!-- Colonne vide pour l'espacement -->
             <div class="col-md-1"></div>
 
-            <!-- Colonne du camembert -->
-            <div class="col-md-6 d-flex justify-content-start">
-                <img src="{{ pie_chart }}" alt="Répartition des dépenses" class="img-fluid rounded-3">
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <p style="background-color: white; font-size: 1.2em; text-align: center; width: 100%; padding: 5px; border-radius: 5px;">
+                    Répartition des dépenses
+                </p> 
+                <img src="{{ pie_chart }}" alt="Répartition des dépenses" class="img-fluid rounded-3" style="margin-bottom: 30px;">
             </div>
         </div>
-        <!-- Formulaire pour sélectionner les dates -->
-    <form method="POST" action="{{ url_for('synthese') }}" class="mb-4">
-        <div class="row">
-            <div class="col-md-4">
-                <label for="start_date" class="form-label">Date de début</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
+
+        <form method="POST" action="{{ url_for('synthese') }}" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="start_date" class="form-label">Date de début</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date" class="form-label">Date de fin</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                </div>
             </div>
-            <div class="col-md-4">
-                <label for="end_date" class="form-label">Date de fin</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" required>
-            </div>
-            <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary">Filtrer</button>
-            </div>
-        </div>
-    </form>
+        </form>
     </div>
-    
-    <!-- Bootstrap JS et dépendances -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,37 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-        <title>Mon compte Flask</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    </head>
-<body class = "transactions">
-    <!-- Barre de navigation -->
-    <nav class="navbar">
-        <div class="dock">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
-            <div class="navbar-nav">
-                    <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
-                    <a class="nav-item {% if request.endpoint == 'actions' %}active{% endif %}" href="{{ url_for('actions') }}">Filtrage</a> <!-- Nouvel onglet -->
-                    <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
-                    <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
-                    <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
-
-
-            </div>
-        </div>
-    </nav>
-
-    <!-- Contenu principal -->
-    <div class="container">
-        <div class="tableau_operations">
-            <h1 class="my-4">Tableau des Opérations</h1>
-            <table class="table table-striped">
-                {{ table|safe }}
-            </table>
-        </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Mon compte Flask</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="transactions">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="dock">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Votre Banque</a>
+      <div class="navbar-nav">
+        <a class="nav-item {% if request.endpoint == 'registerAccount' %}active{% endif %}" href="{{ url_for('registerAccount') }}">Nouveau Compte</a>
+        <a class="nav-item {% if request.endpoint == 'actions' %}active{% endif %}" href="{{ url_for('actions') }}">Filtrage</a>
+        <a class="nav-item {% if request.endpoint == 'synthese' %}active{% endif %}" href="{{ url_for('synthese') }}">Synthèse</a>
+        <a class="nav-item {% if request.endpoint == 'register' %}active{% endif %}" href="{{ url_for('register') }}">S'inscrire</a>
+        <a class="nav-item" href="{{ url_for('logout') }}">Déconnexion ({{ session['user'] }})</a>
+      </div>
     </div>
+  </nav>
+
+  <!-- Contenu -->
+  <div class="container">
+    <div class="tableau_operations">
+      <h1 class="my-4">Tableau des Opérations</h1>
+      <table class="table table-striped">
+        {{ table|safe }}
+      </table>
+    </div>
+  </div>
 </body>
 </html>

@@ -3,13 +3,11 @@ from markupsafe import escape
 from user import User
 import hashlib
 import secrets
-from datetime import timedelta
-from datetime import datetime
+from datetime import timedelta, datetime, date
 import pandas as pd
 from compte import Account
 from type import Type
 from category import Category
-from datetime import date
 from transaction import Transaction
 from graph import GraphManager
 
@@ -33,7 +31,6 @@ def index():
 
         if nom and motDePasse:
             user_record = user.query.filter_by(nom=nom).first()
-
             if user_record and user_record.check_password(motDePasse):
                 return redirect(url_for('affichage_compte'))
             else:
@@ -57,7 +54,6 @@ def traitementTransaction():
         type = request.form['type']
         dateTrans = date.today()
 
-        print(compte)
         accounts = account.readAccounts(session['idUtilisateur'], compte)
         accountver = account.readAccounts(session['idUtilisateur'], compteVir)
 
@@ -85,72 +81,68 @@ def traitementTransaction():
 
 @app.route('/affichage_compte')
 def affichage_compte():
-    """Affiche les détails du compte avec filtres possibles."""
-    # Vérifiez si l'utilisateur est connecté
+    """Affiche les détails du compte avec filtres."""
     if 'user' not in session:
         return redirect(url_for('index'))
 
+    user.ensure_connection()
+
+    # Récupérer les paramètres de filtrage
+    date = request.args.get('date')
+    categorie = request.args.get('categorie')
+    type_transaction = request.args.get('type')
+    tri_montant = request.args.get('tri_montant')
+    date_debut = request.args.get('date_debut')
+    date_fin = request.args.get('date_fin')
+
+    # Construire la requête SQL avec filtres
+    query = """
+    SELECT t.idCompte, t.description, t.montant, t.dateTransaction, ty.titre AS type 
+    FROM transaction t
+    JOIN type ty ON t.idType = ty.idType
+    WHERE t.idCompte IN (
+        SELECT idCompte FROM compte WHERE idUtilisateur = %s
+    )
+    """
+    params = [session['idUtilisateur']]
+
+    if date:
+        query += " AND t.dateTransaction = %s"
+        params.append(date)
+
+    if categorie:
+        query += " AND t.idCategorie = %s"
+        params.append(categorie)
+
+    if type_transaction:
+        query += " AND t.idType = %s"
+        params.append(type_transaction)
+
+    if date_debut and date_fin:
+        query += " AND t.dateTransaction BETWEEN %s AND %s"
+        params.extend([date_debut, date_fin])
+
+    if tri_montant:
+        query += f" ORDER BY t.montant {'ASC' if tri_montant == 'croissant' else 'DESC'}"
     else:
-        # S'assurer que la connexion est active
-        user.ensure_connection()
-
-        # Récupérer les paramètres de la requête
-        date = request.args.get('date')
-        categorie = request.args.get('categorie')
-        type_transaction = request.args.get('type')
-        tri_montant = request.args.get('tri_montant')
-        date_debut = request.args.get('date_debut')
-        date_fin = request.args.get('date_fin')
-
-        # Construire la requête SQL en fonction des filtres
-        query = "SELECT description, montant, dateTransaction FROM transaction WHERE idCompte = %s"
-        params = [session['idUtilisateur']]
-
-        # Ajouter des filtres à la requête si nécessaire
-        if date:  # Si une date spécifique est fournie
-            query += " AND dateTransaction = %s"
-            params.append(date)
-
-        if categorie:  # Si une catégorie est fournie
-            query += " AND idCategorie = %s"
-            params.append(categorie)
-
-        if type_transaction:  # Si un type de transaction est fourni
-            query += " AND idType = %s"
-            params.append(type_transaction)
-
-        if date_debut and date_fin:  # Si une plage de dates est fournie
-            query += " AND dateTransaction BETWEEN %s AND %s"
-            params.extend([date_debut, date_fin])
-
-        if tri_montant:  # Si un tri sur le montant est demandé
-            query += f" ORDER BY montant {'ASC' if tri_montant == 'croissant' else 'DESC'}"
-        else:
-            query += " ORDER BY dateTransaction DESC"
-
-        # Débogage : afficher la requête et les paramètres
-        print(f"Executing query: {query}")
-        print(f"With params: {params}")
+        query += " ORDER BY t.dateTransaction DESC"
 
     try:
-        # Exécuter la requête SQL
         user.cursor.execute(query, params)
         results = user.cursor.fetchall()
-        
-        # Obtenez les noms des colonnes
         columns = [desc[0] for desc in user.cursor.description]
 
-        # Création d'un DataFrame pandas pour formater les données
+        # Création du DataFrame
         df = pd.DataFrame(results, columns=columns)
         df.rename(columns={
+            'idCompte': 'Compte',
             'description': 'Opérations',
             'montant': 'Montant',
-            'dateTransaction': 'Date'
+            'dateTransaction': 'Date',
+            'type': 'Type'
         }, inplace=True)
 
-        # Conversion du DataFrame en HTML
         df_html = df.to_html(classes='table table-striped', index=False)
-
         return render_template('affichage_compte.html', table=df_html)
     except Exception as e:
         print(f"Database error: {e}")
@@ -178,19 +170,16 @@ def action():
 @app.route('/synthese', methods=['GET', 'POST'])
 def synthese():
     """Page de synthèse avec graphiques et tableaux."""
-    # Vérifiez si l'utilisateur est connecté
     if 'user' not in session:
         return redirect(url_for('index'))
 
     try:
-        # S'assurer que la connexion est active
         user.ensure_connection()
 
-        # Récupérer les dates du formulaire si elles sont fournies
+        # Récupérer les dates de filtrage
         start_date = request.form.get('start_date')
         end_date = request.form.get('end_date')
 
-        # Convertir les dates en objets datetime si elles sont fournies
         if start_date and end_date:
             start_date = datetime.strptime(start_date, '%Y-%m-%d')
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
@@ -198,57 +187,34 @@ def synthese():
             start_date = None
             end_date = None
 
-        # Log des dates pour débogage
-        print(f"start_date: {start_date}")
-        print(f"end_date: {end_date}")
-
-        # Récupérer les comptes de l'utilisateur
+        # Récupérer les comptes
         query = "SELECT idCompte, montant FROM compte WHERE idUtilisateur = %s"
-        params = (session['idUtilisateur'],)  # Tuple avec une virgule
-
-        # Exécuter la requête SQL
+        params = (session['idUtilisateur'],)
         user.cursor.execute(query, params)
         results = user.cursor.fetchall()
-
-        # Obtenir les noms des colonnes
         columns = [desc[0] for desc in user.cursor.description]
 
-        # Création d'un DataFrame pandas pour formater les données
+        # Créer le DataFrame
         df = pd.DataFrame(results, columns=columns)
         df.rename(columns={
             'idCompte': 'Numéro du Compte',
             'montant': 'Solde',
         }, inplace=True)
 
-        # Calculer le total des soldes
+        # Calculer le total
         total_solde = df['Solde'].sum()
-
-        # Ajouter une ligne pour le total
         total_row = pd.DataFrame({
             'Numéro du Compte': ['Total'],
             'Solde': [total_solde]
         })
         df = pd.concat([df, total_row], ignore_index=True)
-
-        # Conversion du DataFrame en HTML
         df_html = df.to_html(classes='table table-striped', index=False)
 
-        # Instanciation de GraphManager
+        # Générer le graphique
         graph_manager = GraphManager()
-
-        # Récupération de l'ID utilisateur depuis la session
         user_id = session['idUtilisateur']
+        pie_chart = graph_manager.get_expense(user, user_id, start_date, end_date)
 
-        # Génération du graphique
-        try:
-            print("Génération du graphique en cours...")  # Message de débogage
-            pie_chart = graph_manager.get_expense(user, user_id, start_date, end_date)  # Génère le graphique avec les dates
-            
-        except Exception as e:
-            print(f"Erreur lors de la génération du graphique: {e}")
-            return "Une erreur est survenue lors de la génération du graphique.", 500
-
-        # Affichage de la page avec le graphique et le tableau
         return render_template('synthese.html', table=df_html, pie_chart=pie_chart)
 
     except Exception as e:

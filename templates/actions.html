@@ -1,127 +1,123 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Votre fichier CSS -->
-    <link rel="stylesheet" href="styles.css">
-    <title>Filtrer les Transactions</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Filtrer les Transactions</title>
 </head>
 <body class="actions">
-    <!-- Barre de navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-landmark me-2"></i>Votre Banque
+  <!-- Barre de navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <i class="fas fa-landmark me-2"></i>Votre Banque
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('doTransactions') }}">
+              <i class="fas fa-exchange-alt me-1"></i> Faire une transaction
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('doTransactions') }}">
-                            <i class="fas fa-exchange-alt me-1"></i> Faire une transaction
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('affichage_compte') }}">
-                            <i class="fas fa-history me-1"></i> Transactions
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registerAccount') }}">
-                            <i class="fas fa-plus-circle me-1"></i> Nouveau Compte
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('synthese') }}">
-                            <i class="fas fa-chart-pie me-1"></i> Synthèse
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Contenu principal -->
-    <div class="container mt-5">
-        <div class="card p-4 filtrage-transactions-form border border-primary border-1">
-            <h1 class="mb-4 text-primary"><i class="fas fa-filter me-2"></i>Filtrer les Transactions</h1>
-            <form action="/affichage_compte" method="GET">
-                <div class="row g-3">
-                    <!-- Filtre par date -->
-                    <div class="col-md-6">
-                        <label for="date" class="form-label"><i class="fas fa-calendar-alt me-2 text-secondary"></i>Date spécifique :</label>
-                        <input type="date" id="date" name="date" class="form-control">
-                    </div>
-
-                    <!-- Filtre par catégorie -->
-                    <div class="col-md-6">
-                        <label for="categorie" class="form-label"><i class="fas fa-tag me-2 text-secondary"></i>Catégorie :</label>
-                        <select id="categorie" name="categorie" class="form-select">
-                            <option value="">Toutes les catégories</option>
-                            <option value="1">Alimentation</option>
-                            <option value="2">Salaire</option>
-                            <option value="3">Loyer</option>
-                            <option value="4">Factures</option>
-                            <option value="5">Loisirs</option>
-                        </select>
-                    </div>
-
-                    <!-- Filtre par type de transaction -->
-                    <div class="col-md-6">
-                        <label for="type" class="form-label"><i class="fas fa-exchange-alt me-2 text-secondary"></i>Type de transaction :</label>
-                        <select id="type" name="type" class="form-select">
-                            <option value="">Tous les types</option>
-                            <option value="2">Dépense</option>
-                            <option value="1">Revenu</option>
-                            <option value="3">Transfert</option>
-                        </select>
-                    </div>
-
-                    <!-- Tri par montant -->
-                    <div class="col-md-6">
-                        <label for="tri_montant" class="form-label"><i class="fas fa-sort-amount-down me-2 text-secondary"></i>Trier par montant :</label>
-                        <select id="tri_montant" name="tri_montant" class="form-select">
-                            <option value="">Aucun tri</option>
-                            <option value="croissant">Montant croissant</option>
-                            <option value="decroissant">Montant décroissant</option>
-                        </select>
-                    </div>
-
-                    <!-- Filtre entre deux dates -->
-                    <div class="col-12">
-                        <label class="form-label"><i class="fas fa-calendar-week me-2 text-secondary"></i>Entre deux dates :</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="date" id="date_debut" name="date_debut" class="form-control" placeholder="Date de début">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="date" id="date_fin" name="date_fin" class="form-control" placeholder="Date de fin">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bouton de soumission -->
-                    <div class="col-12 text-center mt-4">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter me-2"></i>Filtrer</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('affichage_compte') }}">
+              <i class="fas fa-history me-1"></i> Transactions
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('registerAccount') }}">
+              <i class="fas fa-plus-circle me-1"></i> Nouveau Compte
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('synthese') }}">
+              <i class="fas fa-chart-pie me-1"></i> Synthèse
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <!-- Bootstrap JS Bundle avec Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Contenu principal -->
+  <div class="container mt-5">
+    <div class="card p-4 filtrage-transactions-form border border-primary border-1">
+      <h1 class="mb-4 text-primary"><i class="fas fa-filter me-2"></i>Filtrer les Transactions</h1>
+      <form action="/affichage_compte" method="GET">
+        <div class="row g-3">
+          <!-- Date spécifique -->
+          <div class="col-md-6">
+            <label for="date" class="form-label"><i class="fas fa-calendar-alt me-2 text-secondary"></i>Date spécifique</label>
+            <input type="date" id="date" name="date" class="form-control">
+          </div>
+
+          <!-- Catégorie -->
+          <div class="col-md-6">
+            <label for="categorie" class="form-label"><i class="fas fa-tag me-2 text-secondary"></i>Catégorie</label>
+            <select id="categorie" name="categorie" class="form-select">
+              <option value="">Toutes les catégories</option>
+              <option value="1">Alimentation</option>
+              <option value="2">Salaire</option>
+              <option value="3">Loyer</option>
+              <option value="4">Factures</option>
+              <option value="5">Loisirs</option>
+            </select>
+          </div>
+
+          <!-- Type de transaction -->
+          <div class="col-md-6">
+            <label for="type" class="form-label"><i class="fas fa-exchange-alt me-2 text-secondary"></i>Type de transaction</label>
+            <select id="type" name="type" class="form-select">
+              <option value="">Tous les types</option>
+              <option value="2">Dépense</option>
+              <option value="1">Revenu</option>
+              <option value="3">Transfert</option>
+            </select>
+          </div>
+
+          <!-- Tri par montant -->
+          <div class="col-md-6">
+            <label for="tri_montant" class="form-label"><i class="fas fa-sort-amount-down me-2 text-secondary"></i>Trier par montant</label>
+            <select id="tri_montant" name="tri_montant" class="form-select">
+              <option value="">Aucun tri</option>
+              <option value="croissant">Montant croissant</option>
+              <option value="decroissant">Montant décroissant</option>
+            </select>
+          </div>
+
+          <!-- Période -->
+          <div class="col-12">
+            <label class="form-label"><i class="fas fa-calendar-week me-2 text-secondary"></i>Entre deux dates</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input type="date" id="date_debut" name="date_debut" class="form-control">
+              </div>
+              <div class="col-md-6">
+                <input type="date" id="date_fin" name="date_fin" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton de filtrage -->
+          <div class="col-12 text-center mt-4">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter me-2"></i>Filtrer</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
